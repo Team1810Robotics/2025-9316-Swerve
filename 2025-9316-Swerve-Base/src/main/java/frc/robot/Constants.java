@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 import com.revrobotics.spark.SparkMax;
-import frc.robot.subsystems.CoralHandlerSubsystem;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -17,7 +17,7 @@ public class Constants {
         public static final int ELEVATOR_MOTOR_1_ID = 10; // Motor ID
         public static final int ELEVATOR_MOTOR_2_ID = 9;  // Motor ID
         public static final int ELEVATOR_ENCODER_PORT = 9; // Encoder port
-x`      public static final int smartCurrentLimit = 40;
+        public static final int smartCurrentLimit = 40;
         public static final class ElevatorLeft {
             public static final int kFollowerModeLeaderId = 9;
             public static final boolean kFollowerModeIsInverted = true;

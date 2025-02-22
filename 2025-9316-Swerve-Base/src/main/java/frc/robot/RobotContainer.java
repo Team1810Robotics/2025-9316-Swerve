@@ -40,11 +40,13 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
-
+    private final CommandXboxController xbox = new CommandXboxController(1);
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     public RobotContainer() {
         configureBindings();
     }
@@ -92,7 +94,7 @@ public class RobotContainer {
         autoChooser.addOption("Middle Auto", AutoSubsystem.getAutoCommand("MiddleAuto"));
 
         // Display on SmartDashboard
-        SmartDashboard.putData("Auto choices", autoChooser);
+        //SmartDashboard.putData("Auto choices", autoChooser);
     }
     public Command getAutonomousCommand() {
         if (autoChooser.getSelected() != null){
