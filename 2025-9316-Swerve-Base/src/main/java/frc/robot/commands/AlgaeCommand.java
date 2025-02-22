@@ -16,7 +16,7 @@ public class AlgaeCommand extends Command {
  
     @Override
     public void initialize() {
-        //algaeSubsystem.distanceSensor.setAutomaticMode(true);
+        algaeSubsystem.distanceSensor.setAutomaticMode(true);
     }
 
     
@@ -35,12 +35,16 @@ public class AlgaeCommand extends Command {
             algaeSubsystem.setSpeed(-1);
            
         }else {
-            if (distance > 8 && distance <= 100) {
+          
+            if (distance > 3 && distance <= 30) {
                 algaeSubsystem.setSpeed(0.4);
-            } else if (distance <= 8 && distance > 0) {
+                System.out.println("Algae trying to pull in");
+            } else if (distance <= 3 && distance > 0) {
                 algaeSubsystem.setSpeed(0.05);
-            } else if (distance <= 0 || distance > 100) {
+                System.out.println("Algae holding");
+            } else if (distance <= 0 || distance > 30) {
                 algaeSubsystem.stop();
+                System.out.println("Algae too far to see :()");
             }
         }
        
