@@ -48,7 +48,9 @@ public class RobotContainer {
     public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     public RobotContainer() {
+        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false));
         configureBindings();
+        configureAutoChooser();
     }
 
     private void configureBindings() {
