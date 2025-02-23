@@ -55,7 +55,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    CommandScheduler.getInstance().schedule(Commands.print(Double.toString(m_robotContainer.algaeSubsystem.getDistanceSensor())));
+  }
 
   @Override
   public void teleopExit() {}
