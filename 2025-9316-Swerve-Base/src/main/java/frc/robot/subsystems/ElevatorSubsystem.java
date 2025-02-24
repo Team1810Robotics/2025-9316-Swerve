@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
@@ -13,68 +11,100 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.REVLibError;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private SparkMax elevatorMotor;
-    private SparkMax elevatorMotor2;
-    private Encoder elevatorEncoder;
-    private PIDController elevatorPID;
-    private DigitalInput upperLimitSwitch;
-    private DigitalInput lowerLimitSwitch;
+    private final SparkMax elevatorMotor;
+    private final SparkMax elevatorMotor2;
+    private final Encoder elevatorEncoder;
+    private final PIDController elevatorPID;
 
     private static final double MAX_HEIGHT = 72.0;
     private static final double MIN_HEIGHT = 0.0;
+    public static final double INTAKE_POSITION = 0.0;
+    public static final double L1_POSITION = 10.0;       
+    public static final double L2_POSITION = 18.0;
+    public static final double L3_POSITION = 36.0;
+    public static final double HIGH_ALGAE_POSITION = 64;
+    public static final double MANUAL_ADJUST_INCREMENT = 2.0; // Small adjustment for manual control
 
-    public ElevatorSubsystem() { // Corrected constructor name
+    // Elastic Dashboard via NetworkTables
+    private final NetworkTable dashboardTable;
+    private final NetworkTableEntry positionEntry;
+    private final NetworkTableEntry currentEntry;
+
+    public final CoralHandlerSubsystem coralHandler;
+
+    public ElevatorSubsystem(CoralHandlerSubsystem coralHandler) {
+        this.coralHandler = coralHandler;
+
+        // Initialize Motors
         elevatorMotor = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
         elevatorMotor2 = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
+
+        // Configure Motors
         SparkMaxConfig config_ = new SparkMaxConfig();
         SparkMaxConfig config_2 = new SparkMaxConfig();
+
         config_.idleMode(SparkBaseConfig.IdleMode.kBrake).smartCurrentLimit(ElevatorConstants.smartCurrentLimit);
-        config_2.idleMode(SparkBaseConfig.IdleMode.kBrake).smartCurrentLimit(ElevatorConstants.smartCurrentLimit).follow(ElevatorConstants.ELEVATOR_MOTOR_1_ID, true);
-        elevatorMotor.configure(config_, SparkBase.ResetMode.kResetSafeParameters,SparkBase.PersistMode.kPersistParameters);
-        elevatorMotor2.configure(config_2, SparkBase.ResetMode.kResetSafeParameters,SparkBase.PersistMode.kPersistParameters);
+        config_2.idleMode(SparkBaseConfig.IdleMode.kBrake).smartCurrentLimit(ElevatorConstants.smartCurrentLimit)
+                .follow(Constants.ElevatorConstants.ELEVATOR_MOTOR_1_ID, true); // Inverted follow
 
-        elevatorEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X); // Correct Encoder instantiation
+        elevatorMotor.configure(config_, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        elevatorMotor2.configure(config_2, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
-        elevatorEncoder.setDistancePerPulse(1.0); // Calibrate this value!
+        // Initialize Encoder
+        elevatorEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+        double pulsesPerRevolution = 1024;
+        double inchesPerRevolution = Math.PI * 2; // Assuming 2-inch pulley
+        elevatorEncoder.setDistancePerPulse(inchesPerRevolution / pulsesPerRevolution);
 
-        elevatorPID = new PIDController(1.0, 0.0, 0.0); // Correct PIDController instantiation
+        // Initialize PID Controller
+        elevatorPID = new PIDController(0.05, 0.0, 0.0); // Adjust constants as needed
+        elevatorPID.setTolerance(0.5); // Allowable error range
 
-        elevatorPID.setSetpoint(0); // Correct method call
-
-        elevatorPID.setTolerance(1.0); // Correct method call
-
-        // Initialize limit switches (replace 2 and 3 with your actual pin numbers)
-        upperLimitSwitch = new DigitalInput(2);
-        lowerLimitSwitch = new DigitalInput(3);
-
-        SmartDashboard.putNumber("Motor Power", elevatorMotor.getOutputCurrent());
+        // Elastic Dashboard via NetworkTables
+        dashboardTable = NetworkTableInstance.getDefault().getTable("Elevator");
+        positionEntry = dashboardTable.getEntry("Elevator Position");
+        currentEntry = dashboardTable.getEntry("Motor Current");
     }
 
-    public void controlElevator(double speed) { // Correct method signature
-        // Check limits *before* moving
-        if ((speed > 0 && !upperLimitSwitch.get()) || (speed < 0 && !lowerLimitSwitch.get())) { // Active low
-            // Check software limits if hardware limits are not triggered
-            if ((speed > 0 && elevatorEncoder.getDistance() < MAX_HEIGHT)
-                    || (speed < 0 && elevatorEncoder.getDistance() > MIN_HEIGHT)) {
-                elevatorMotor.set(speed);
-                elevatorMotor2.set(speed);
-            } else {
-                stopElevator();
-            }
+    // Setpoint method for PID control
+    public void setElevatorPosition(double targetPosition) {
+
+        if (coralHandler.isElevatorLocked()) {
+            stop(); //stop movement if locked
+            System.out.println("Elevator is LOCKEd by Coral Handler");
+            return;
+        }
+
+        if (isWithinBounds(targetPosition)) {
+            double power = elevatorPID.calculate(getElevatorPosition(), targetPosition);
+            elevatorMotor.set(power);
         } else {
-            stopElevator(); // Stop if limit switch is active
+            stop();
         }
     }
-    
-    public void setPower(double power) {
-        elevatorMotor.set(power);
-        elevatorMotor2.set(power);
-    }
-    public void stopElevator() {
+
+    public void stop() {
         elevatorMotor.set(0);
-        elevatorMotor2.set(0);
+    }
+
+    public double getElevatorPosition() {
+        return elevatorEncoder.getDistance();
+    }
+
+    public boolean isWithinBounds(double position) {
+        return position >= MIN_HEIGHT && position <= MAX_HEIGHT;
+    }
+
+    @Override
+    public void periodic() {
+        // Update Elastic Dashboard via NetworkTables
+        positionEntry.setDouble(getElevatorPosition());
+        currentEntry.setDouble(elevatorMotor.getOutputCurrent());
     }
 }

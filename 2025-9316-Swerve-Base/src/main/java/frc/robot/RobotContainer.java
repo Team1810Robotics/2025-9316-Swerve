@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AlgaeCommand;
-
+import frc.robot.commands.ElevatorCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeSubsystem;
@@ -45,7 +45,9 @@ import org.elasticsearch.action.index.IndexRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 @SuppressWarnings("unused") // For now :) 
+
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -62,10 +64,12 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(); // Initialize Elevator Subsystem
 
-    private final CoralHandlerSubsystem coralHandlerSubsystem = new CoralHandlerSubsystem();
+    private final CoralHandlerSubsystem coralHandler = new CoralHandlerSubsystem();
+    
     public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
+    
+    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler); // Initialize Elevator Subsystem
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
    public RobotContainer(){
         algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false));
@@ -90,8 +94,7 @@ public class RobotContainer {
             )
         );
 
-        xbox.leftBumper().whileTrue(new AlgaeCommand(algaeSubsystem, true));
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+                joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
@@ -102,12 +105,31 @@ public class RobotContainer {
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        //Elevator - left bumper and right bumper to lower and raise.
-		joystick.rightBumper().whileTrue(new InstantCommand(() -> elevatorSubsystem.controlElevator(0.3))); // Raise elevator
-        joystick.leftBumper().whileTrue(new InstantCommand(() -> elevatorSubsystem.controlElevator(-0.3))); // Lower elevator
-		
+
         // reset the field-centric heading on a button press
         joystick.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        // Algae Control
+        xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true));
+
+        // Elevator Controls
+        xbox.a().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));    // Intake
+        xbox.b().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));        // L1
+        xbox.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));        // L2
+        xbox.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L3_POSITION));        // L3
+        xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.HIGH_ALGAE_POSITION)); // HighAlgae
+
+        // Elevator Emergency Stop
+        xbox.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));
+
+        //Eject Coral
+        xbox.rightTrigger().whileTrue(new InstantCommand(() -> coralHandler.startOuttake()))
+                   .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
+
+        // Manual Adjustments for Elevator
+        xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
+        xbox.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+        
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

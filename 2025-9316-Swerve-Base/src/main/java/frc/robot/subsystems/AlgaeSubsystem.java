@@ -1,14 +1,14 @@
 package frc.robot.subsystems;
+import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.jni.DistanceSensorJNIWrapper;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
-import edu.wpi.first.units.Unit;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.*;
 
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
