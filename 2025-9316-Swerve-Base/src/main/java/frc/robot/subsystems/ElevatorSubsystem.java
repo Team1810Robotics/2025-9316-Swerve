@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor2.configure(config_2, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
         // Initialize Encoder
-        elevatorEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+        elevatorEncoder = new Encoder(Constants.ElevatorConstants.ELEVATOR_ENCODER_PORT, Constants.ElevatorConstants.ELEVATOR_ENCODER_PORT_2, false, Encoder.EncodingType.k4X);
         double pulsesPerRevolution = 1024;
         double inchesPerRevolution = Math.PI * 2; // Assuming 2-inch pulley
         elevatorEncoder.setDistancePerPulse(inchesPerRevolution / pulsesPerRevolution);
@@ -77,7 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         if (coralHandler.isElevatorLocked()) {
             stop(); //stop movement if locked
-            System.out.println("Elevator is LOCKEd by Coral Handler");
+            System.out.println("Elevator is Locked by Coral Handler");
             return;
         }
 

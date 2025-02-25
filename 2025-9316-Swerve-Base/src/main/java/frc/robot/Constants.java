@@ -17,7 +17,8 @@ public class Constants {
         public static final double ELEVATOR_DOWN_POSITION = 0; // Units?
         public static final int ELEVATOR_MOTOR_1_ID = 10; // Motor ID
         public static final int ELEVATOR_MOTOR_2_ID = 9;  // Motor ID
-        public static final int ELEVATOR_ENCODER_PORT = 9; // Encoder port
+        public static final int ELEVATOR_ENCODER_PORT = 9; // Elevator Encoder port 1
+        public static final int ELEVATOR_ENCODER_PORT_2 = 10; // Elevator Encoder port 2 
         public static final int smartCurrentLimit = 40;
         public static final class ElevatorLeft {
             public static final int kFollowerModeLeaderId = 9;

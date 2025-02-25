@@ -79,12 +79,12 @@ public class RobotContainer {
     }
 
     public void setElastic(){
-       teleopTab.addDouble("Match Time", () -> DriverStation.getMatchTime());
-       teleopTab.addDouble("Algae Distance", () -> algaeSubsystem.getDistanceSensor());
-       teleopTab.addDouble("Elevator Encoder", () -> elevatorSubsystem.getElevatorPosition());
-       teleopTab.addDouble("Elevator Current", () -> elevatorSubsystem.getEntry());
-       teleopTab.addDouble("Elevator Position", () -> elevatorSubsystem.getEntry());
-       teleopTab.addDoulbe("Is Hopper Broken", () -> CoralHandlerSubsystem.isHopperBroken());
+     //  teleopTab.addDouble("Match Time", () -> DriverStation.getMatchTime());
+     //  teleopTab.addDouble("Algae Distance", () -> algaeSubsystem.getDistanceSensor());
+     //  teleopTab.addDouble("Elevator Encoder", () -> elevatorSubsystem.getElevatorPosition());
+    //   teleopTab.addDouble("Elevator Current", () -> elevatorSubsystem.getEntry());
+    //   teleopTab.addDouble("Elevator Position", () -> elevatorSubsystem.getEntry());
+    //   teleopTab.addDoulbe("Is Hopper Broken", () -> CoralHandlerSubsystem.isHopperBroken());
     }  
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
