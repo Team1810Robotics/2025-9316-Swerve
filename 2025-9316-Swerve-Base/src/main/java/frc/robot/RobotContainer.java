@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.commands.AlgaeCommand;
 import frc.robot.commands.ElevatorCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,6 +50,8 @@ import java.util.Map;
 @SuppressWarnings("unused") // For now :) 
 
 public class RobotContainer {
+    private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main Tab");
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -76,15 +79,37 @@ public class RobotContainer {
         setElastic();
         configureBindings();
         configureAutoChooser();
+        setupShuffleboard();
+    }
+
+    private void setupShuffleboard() {
+        mainTab.addBoolean("Hopper Beam Break", () -> coralHandler.isHopperBroken())
+            .withPosition(0,0).withSize(2,1);
+
+        mainTab.addBoolean("Intake Beam Break", () -> coralHandler.isIntakeBroken())
+            .withPosition(0,1).withSize(2,1);
+
+        mainTab.addBoolean("Outtake Beam Break", () -> coralHandler.isOuttakeBroken())
+            .withPosition(0,2).withSize(2,1);
+
+        mainTab.addBoolean("Elevator Locked", () -> coralHandler.isElevatorLocked())
+            .withPosition(0,3).withSize(2,1);
+
+        mainTab.addNumber("Elevator Position", () -> elevatorSubsystem.getElevatorPosition())
+            .withPosition(2,0).withSize(2,1);
+
+        
+
     }
 
     public void setElastic(){
-       teleopTab.addDouble("Match Time", () -> DriverStation.getMatchTime());
+
+/*       teleopTab.addDouble("Match Time", () -> DriverStation.getMatchTime());
        teleopTab.addDouble("Algae Distance", () -> algaeSubsystem.getDistanceSensor());
        teleopTab.addDouble("Elevator Encoder", () -> elevatorSubsystem.getElevatorPosition());
        teleopTab.addDouble("Elevator Current", () -> elevatorSubsystem.getEntry());
        teleopTab.addDouble("Elevator Position", () -> elevatorSubsystem.getEntry());
-       teleopTab.addDoulbe("Is Hopper Broken", () -> CoralHandlerSubsystem.isHopperBroken());
+       teleopTab.addDoulbe("Is Hopper Broken", () -> CoralHandlerSubsystem.isHopperBroken());*/
     }  
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -98,8 +123,8 @@ public class RobotContainer {
             )
         );
 
-                joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
+            joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+            joystick.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
@@ -121,7 +146,7 @@ public class RobotContainer {
         xbox.b().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));        // L1
         xbox.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));        // L2
         xbox.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L3_POSITION));        // L3
-        xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.HIGH_ALGAE_POSITION)); // HighAlgae
+        //xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.HIGH_ALGAE_POSITION)); // HighAlgae
 
         // Elevator Emergency Stop
         xbox.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));

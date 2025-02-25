@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -109,6 +110,19 @@ public class CoralHandlerSubsystem extends SubsystemBase {
             System.out.println("Reverse complete. Resuming normal intake.");
             setLEDColor("BLUE"); // Resume intake
         }
+    }
+
+
+    public boolean isHopperBroken(){
+        return !hopperBeamBreak.get();
+    }
+
+    public boolean isOuttakeBroken(){
+        return !outtakeBeamBreak.get();
+    }
+
+    public boolean isIntakeBroken(){
+        return !intakeBeamBreak.get();
     }
 
     public boolean isElevatorLocked() {

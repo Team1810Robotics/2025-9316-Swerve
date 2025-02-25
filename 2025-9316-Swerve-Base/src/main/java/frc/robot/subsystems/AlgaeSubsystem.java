@@ -6,14 +6,15 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-//Note Details on distance center driver installed from here: https://github.com/REVrobotics/2m-Distance-Sensor/?tab=readme-ov-file
+//Note Details on distance sensor driver installed from here: https://github.com/REVrobotics/2m-Distance-Sensor/?tab=readme-ov-file
+@SuppressWarnings("unused")
 public class AlgaeSubsystem extends SubsystemBase {
    private SparkMax motor;
 
@@ -22,6 +23,8 @@ public class AlgaeSubsystem extends SubsystemBase {
     public AlgaeSubsystem() {
         distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
         motor = new SparkMax(AlgaeConstants.MOTOR_ID, MotorType.kBrushless);
+
+        //Shuffleboard.getTab("Algae").addNumber("Algae Distance", () -> distanceSensor.GetRange());
     }
 
     public void setSpeed(double speed){
@@ -32,10 +35,9 @@ public class AlgaeSubsystem extends SubsystemBase {
     }
 
      public double getDistanceSensor() {
-         if (distanceSensor.isRangeValid()){
+         if (true){distanceSensor.isRangeValid();
              return distanceSensor.getRange();
-         }
-         return -1;
+         } else {return -1;}
      }
 
     public void stop(){

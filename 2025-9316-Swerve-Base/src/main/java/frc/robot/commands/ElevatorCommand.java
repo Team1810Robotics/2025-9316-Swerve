@@ -54,7 +54,7 @@ public class ElevatorCommand extends Command {
     @Override
     public boolean isFinished() {
         if (targetPosition != null) {
-            return Math.abs(elevatorSubsystem.getElevatorPosition() - targetPosition) <= 0.5;
+            return Math.abs(elevatorSubsystem.getElevatorPosition() - targetPosition) <= 0.2;
         }
         return true; // Manual adjustments finish immediately after the adjustment
     }

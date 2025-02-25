@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.AlgaeSubsystem;
 
 public class AlgaeCommand extends Command {
@@ -40,11 +38,11 @@ public class AlgaeCommand extends Command {
                 algaeSubsystem.setSpeed(0.4);
                 System.out.println("Algae trying to pull in");
             } else if (distance <= 3 && distance > 0) {
-                algaeSubsystem.setSpeed(0.05);
+                algaeSubsystem.setSpeed(0.1);
                 System.out.println("Algae holding");
             } else if (distance <= 0 || distance > 30) {
                 algaeSubsystem.stop();
-                System.out.println("Algae too far to see :()");
+                //System.out.println("Algae too far to see :()");
             }
         }
        
