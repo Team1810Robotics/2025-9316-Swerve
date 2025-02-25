@@ -25,10 +25,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double MAX_HEIGHT = 72.0;
     private static final double MIN_HEIGHT = 0.0;
     public static final double INTAKE_POSITION = 0.0;
-    public static final double L1_POSITION = 10.0;       
-    public static final double L2_POSITION = 18.0;
-    public static final double L3_POSITION = 36.0;
-    public static final double HIGH_ALGAE_POSITION = 64;
+    public static final double L1_POSITION = 40.0;        //10    
+    public static final double L2_POSITION = 60.0;        //18
+    public static final double L3_POSITION = 70.0;        //36
+    public static final double HIGH_ALGAE_POSITION = 90;  //64
     public static final double MANUAL_ADJUST_INCREMENT = 2.0; // Small adjustment for manual control
 
     // Elastic Dashboard via NetworkTables
@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor2.configure(config_2, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
         // Initialize Encoder
-        elevatorEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+        elevatorEncoder = new Encoder(Constants.ElevatorConstants.ELEVATOR_ENCODER_PORT, 10, false, Encoder.EncodingType.k4X);
         double pulsesPerRevolution = 1024;
         double inchesPerRevolution = Math.PI * 2; // Assuming 2-inch pulley
         elevatorEncoder.setDistancePerPulse(inchesPerRevolution / pulsesPerRevolution);
