@@ -98,6 +98,12 @@ public class RobotContainer {
         mainTab.addNumber("Elevator Position", () -> elevatorSubsystem.getElevatorPosition())
             .withPosition(2,0).withSize(2,1);
 
+        mainTab.addBoolean("Is Coral In Process", () -> coralHandler.isCoralInProcess())
+            .withPosition(2,1).withSize(2,1);
+
+        mainTab.addBoolean("Is Reversing", () -> coralHandler.isReversing())
+            .withPosition(3,2).withSize(2,1);
+
         
 
     }

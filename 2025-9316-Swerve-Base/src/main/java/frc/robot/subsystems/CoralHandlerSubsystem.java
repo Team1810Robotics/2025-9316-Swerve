@@ -114,19 +114,30 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
 
     public boolean isHopperBroken(){
-        return !hopperBeamBreak.get();
+        return false;
+        //return !hopperBeamBreak.get();
     }
 
     public boolean isOuttakeBroken(){
-        return !outtakeBeamBreak.get();
+        return false;
+        //return !outtakeBeamBreak.get();
     }
 
     public boolean isIntakeBroken(){
-        return !intakeBeamBreak.get();
+        return false;
+        //return !intakeBeamBreak.get();
     }
 
     public boolean isElevatorLocked() {
         return elevatorLocked;
+    }
+
+    public boolean isReversing() {
+        return isReversing;
+    }
+
+    public boolean isCoralInProcess() {
+        return isCoralInProcess;
     }
 
     private void setLEDColor(String color) {

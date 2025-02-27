@@ -19,11 +19,13 @@ public class Constants {
         public static final int ELEVATOR_MOTOR_2_ID = 9;  // Motor ID
         public static final int ELEVATOR_ENCODER_PORT = 9; // Encoder port
         public static final int smartCurrentLimit = 40;
+
         public static final class ElevatorLeft {
             public static final int kFollowerModeLeaderId = 9;
             public static final boolean kFollowerModeIsInverted = true;
         }
-        public static final class ElevatorRight {
+
+        public static final class ElevatorRight { 
             public static final int kCanID = 9;
             public static final int kInputMode = 1;
             public static final int kIdleMode = 1;

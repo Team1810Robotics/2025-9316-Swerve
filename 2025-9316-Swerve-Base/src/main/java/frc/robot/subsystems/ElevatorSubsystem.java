@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
@@ -15,22 +18,23 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private final SparkMax elevatorMotor;
     private final SparkMax elevatorMotor2;
-    private final DutyCycleEncoder elevatorEncoder;
+    private final Encoder elevatorEncoder;
     private final PIDController elevatorPID;
-
-    private static final double MAX_HEIGHT = 72.0;
-    private static final double MIN_HEIGHT = 1.175;
+    private final ElevatorFeedforward elevatorFF;
+    private static final double MAX_HEIGHT = 40;
+    private static final double MIN_HEIGHT = 0;
     public static final double INTAKE_POSITION = 1.175;
-    public static final double L1_POSITION = 2.25;        //10    
-    public static final double L2_POSITION = 6;        //18
-    public static final double L3_POSITION = 8;        //36
+    public static final double L1_POSITION = 6;        //10    
+    public static final double L2_POSITION = 10;        //18
+    public static final double L3_POSITION = 28;        //36
     public static final double HIGH_ALGAE_POSITION = 70;  //64
     public static final double MANUAL_ADJUST_INCREMENT = 2.0; // Small adjustment for manual control
-        private static final double PULLEY_CIRCUMFERENCE_INCHES = 2;
+        private static final double TICKS_PER_INCH = 185.0;
     
         private double lastRawValue = 0.0;
         private int rotationCount = 0;
@@ -49,6 +53,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             elevatorMotor = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
             elevatorMotor2 = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
     
+            // Set Feed Forward
+            elevatorFF = new ElevatorFeedforward(0.0, 0.3, 0.0); //TUNE
+
             // Configure Motors
             SparkMaxConfig config_ = new SparkMaxConfig();
             SparkMaxConfig config_2 = new SparkMaxConfig();
@@ -61,19 +68,20 @@ public class ElevatorSubsystem extends SubsystemBase {
             elevatorMotor2.configure(config_2, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
     
             // Initialize Encoder
-            elevatorEncoder = new DutyCycleEncoder(Constants.ElevatorConstants.ELEVATOR_ENCODER_PORT);
-            elevatorEncoder.setConnectedFrequencyThreshold(100);//
+            elevatorEncoder = new Encoder(8, 9);
+            // elevatorEncoder.setConnectedFrequencyThreshold(100);//
     
             // Initialize PID Controller
-            elevatorPID = new PIDController(0.05, 0.0, 0.0); // Adjust constants as needed
-            elevatorPID.setTolerance(0.5); // Allowable error range
+            elevatorPID = new PIDController(0.15, 0.01, 0.00001); // Adjust constants as needed
+            elevatorPID.setTolerance(0.025); // Allowable error range
     
             // Elastic Dashboard via NetworkTables
             dashboardTable = NetworkTableInstance.getDefault().getTable("Elevator");
             positionEntry = dashboardTable.getEntry("Elevator Position");
             currentEntry = dashboardTable.getEntry("Motor Current");
-    
-    
+
+            Shuffleboard.getTab("Elevator").addNumber("Encoder Raw", () -> -elevatorEncoder.get());
+            Shuffleboard.getTab("Elevator").addNumber("Elevator Height", () -> getElevatorPosition());
         }
     
         // Setpoint method for PID control
@@ -86,8 +94,12 @@ public class ElevatorSubsystem extends SubsystemBase {
             }
     
             if (isWithinBounds(targetPosition)) {
-                double power = elevatorPID.calculate(getElevatorPosition(), targetPosition);
-                elevatorMotor.set(power);
+                double currentVelocity = (targetPosition - getElevatorPosition()) / 0.02;
+                double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
+                double feedforward = elevatorFF.calculate(currentVelocity); //apply feedforward
+                double totalPower = pidOutput /*+ feedforward*/;
+                //elevatorPID.calculate(getElevatorPosition(), targetPosition); //pre feedforward
+                elevatorMotor.set(totalPower);
             } else {
                 stop();
             }
@@ -98,20 +110,20 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     
         public double getElevatorPosition() {
-                double currentRawValue = elevatorEncoder.get();
+                double currentRawValue = -elevatorEncoder.get() ;
     
                 //Rollover Counter...
-                if (currentRawValue - lastRawValue > 0.5) {
-                    rotationCount--;
-                } else if (lastRawValue - currentRawValue > 0.5) {
-                    rotationCount++;
-                }
+                // if (currentRawValue - lastRawValue > 0.5) {
+                //     rotationCount--;
+                // } else if (lastRawValue - currentRawValue > 0.5) {
+                //     rotationCount++;
+                // }
                 
                 lastRawValue = currentRawValue;
     
                 double totalRotations = rotationCount + currentRawValue;
     
-                return totalRotations * PULLEY_CIRCUMFERENCE_INCHES;
+                return (totalRotations / TICKS_PER_INCH);
     }
 
     public boolean isWithinBounds(double position) {
