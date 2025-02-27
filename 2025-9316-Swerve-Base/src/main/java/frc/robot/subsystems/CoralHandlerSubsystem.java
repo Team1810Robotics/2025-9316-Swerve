@@ -20,25 +20,25 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     // Coral Handler Motor
     private final SparkMax coralHandlerMotor = new SparkMax(CoralHandlerConstants.CORAL_HANDLER_MOTOR_ID, MotorType.kBrushless);
 
-    // Elevator Movement Lock
-    private boolean elevatorLocked = false;
+    // // Elevator Movement Lock
+    // private boolean elevatorLocked = false;
 
-    // Failsafe Timer
-    private final Timer failsafeTimer = new Timer();
-    private final Timer reverseTimer = new Timer(); // Timer for reverse action in case of failsafe
-    private static final double FAILSAFE_TIMEOUT = 3.0; // 3-second timeout
-    private static final double REVERSE_DURATION = 1.0; // Reverse for 1 second
+    // // Failsafe Timer
+    // private final Timer failsafeTimer = new Timer();
+    // private final Timer reverseTimer = new Timer(); // Timer for reverse action in case of failsafe
+    // private static final double FAILSAFE_TIMEOUT = 3.0; // 3-second timeout
+    // private static final double REVERSE_DURATION = 1.0; // Reverse for 1 second
 
     // Track if coral is passing through
     private boolean isCoralInProcess = false;
-    private boolean isReversing = false;
+    
 
 
     public CoralHandlerSubsystem() {
         coralHandlerMotor.set(0); // Ensure motor starts off
     }
 
-    //Start Intake//
+    // //Start Intake//
     public void startIntake() {
         coralHandlerMotor.set(0.5);
         System.out.println("Coral Handler Intake Active");
@@ -50,10 +50,10 @@ public class CoralHandlerSubsystem extends SubsystemBase {
         System.out.println("Coral Handler Outtake Active");
     }
 
-    public void activateManualOverride() {
-        elevatorLocked = false; // Unlock the elevator manually
-        System.out.println("Manual Override Activated: Elevator Unlocked");
-    }
+    // public void activateManualOverride() {
+    //     elevatorLocked = false; // Unlock the elevator manually
+    //     System.out.println("Manual Override Activated: Elevator Unlocked");
+    // }
 
 
     @Override
@@ -63,78 +63,101 @@ public class CoralHandlerSubsystem extends SubsystemBase {
         boolean intakeBroken = !intakeBeamBreak.get();
         boolean outtakeBroken = !outtakeBeamBreak.get();
 
-        // Hopper Beam Break → Start Intake
-        if (hopperBroken && !isCoralInProcess && !isReversing) {
-            coralHandlerMotor.set(0.5); // Start motor
-            elevatorLocked = true;
+        if (hopperBroken) {
             isCoralInProcess = true;
-            failsafeTimer.reset();
-            failsafeTimer.start();
-            setLEDColor("BLUE"); // Intake Active
-            System.out.println("Coral detected at hopper. Intake started, elevator locked.");
+            System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
+            coralHandlerMotor.set(.25);
         }
 
-        // Intake Beam Break Cleared → Stop Intake
-        if (isCoralInProcess && !intakeBroken && !isReversing) {
-            coralHandlerMotor.set(0); // Stop motor
-            elevatorLocked = false;
+        if (!intakeBroken && !hopperBroken && isCoralInProcess) {
             isCoralInProcess = false;
-            failsafeTimer.stop();
-            setLEDColor("YELLOW"); // Coral ready for scoring
-            System.out.println("Coral cleared intake. Elevator unlocked.");
+            coralHandlerMotor.set(0);
         }
 
-        // Outtake Beam Break → Coral Fully Ejected
-        if (outtakeBroken) {
-            setLEDColor("RED"); // Ejecting
-            System.out.println("Coral fully ejected.");
-        }
+        // if (isCoralInProcess){
+        //     coralHandlerMotor.set(.35);
+        // } else if (!isCoralInProcess) {
+        //     coralHandlerMotor.set(0);
+        // }
 
-        // Failsafe Timeout → Trigger Reverse
-        if (isCoralInProcess && failsafeTimer.get() > FAILSAFE_TIMEOUT && !isReversing) {
-            isReversing = true;
-            reverseTimer.reset();
-            reverseTimer.start();
-            coralHandlerMotor.set(-0.5); // Reverse motor
-            setLEDColor("PURPLE");
-            System.out.println("FAILSAFE: Reversing motor for " + REVERSE_DURATION + " second to clear jam.");
-        }
+        // if (isCoralInProcess && !intakeBroken && hopperBroken) {
+        //     coralHandlerMotor.set(0);
+        //     isCoralInProcess = false;
+        //     System.out.println("[Coral Handler] Intake Stopped - Coral has passed through");
+        // }
 
-        // Complete Reverse → Resume Intake
-        if (isReversing && reverseTimer.get() > REVERSE_DURATION) {
-            reverseTimer.stop();
-            coralHandlerMotor.set(0.5); // Resume normal intake
-            failsafeTimer.reset(); // Reset the failsafe timer
-            failsafeTimer.start();
-            isReversing = false;
-            System.out.println("Reverse complete. Resuming normal intake.");
-            setLEDColor("BLUE"); // Resume intake
-        }
+        // // Hopper Beam Break → Start Intake
+        // if (hopperBroken && !isCoralInProcess && !isReversing) {
+        //     coralHandlerMotor.set(0.5); // Start motor
+        //     elevatorLocked = true;
+        //     isCoralInProcess = true;
+        //     failsafeTimer.reset();
+        //     failsafeTimer.start();
+        //     setLEDColor("BLUE"); // Intake Active
+        //     System.out.println("Coral detected at hopper. Intake started, elevator locked.");
+        // }
+
+        // // Intake Beam Break Cleared → Stop Intake
+        // if (isCoralInProcess && !intakeBroken && !isReversing) {
+        //     coralHandlerMotor.set(0); // Stop motor
+        //     elevatorLocked = false;
+        //     isCoralInProcess = false;
+        //     failsafeTimer.stop();
+        //     setLEDColor("YELLOW"); // Coral ready for scoring
+        //     System.out.println("Coral cleared intake. Elevator unlocked.");
+        // }
+
+        // // Outtake Beam Break → Coral Fully Ejected
+        // if (outtakeBroken) {
+        //     setLEDColor("RED"); // Ejecting
+        //     System.out.println("Coral fully ejected.");
+        // }
+
+        // // Failsafe Timeout → Trigger Reverse
+        // if (isCoralInProcess && failsafeTimer.get() > FAILSAFE_TIMEOUT && !isReversing) {
+        //     isReversing = true;
+        //     reverseTimer.reset();
+        //     reverseTimer.start();
+        //     coralHandlerMotor.set(-0.5); // Reverse motor
+        //     setLEDColor("PURPLE");
+        //     System.out.println("FAILSAFE: Reversing motor for " + REVERSE_DURATION + " second to clear jam.");
+        // }
+
+        // // Complete Reverse → Resume Intake
+        // if (isReversing && reverseTimer.get() > REVERSE_DURATION) {
+        //     reverseTimer.stop();
+        //     coralHandlerMotor.set(0.5); // Resume normal intake
+        //     failsafeTimer.reset(); // Reset the failsafe timer
+        //     failsafeTimer.start();
+        //     isReversing = false;
+        //     System.out.println("Reverse complete. Resuming normal intake.");
+        //     setLEDColor("BLUE"); // Resume intake
+        // }
     }
 
 
     public boolean isHopperBroken(){
-        return false;
-        //return !hopperBeamBreak.get();
+        //return false;
+        return !hopperBeamBreak.get();
     }
 
     public boolean isOuttakeBroken(){
-        return false;
-        //return !outtakeBeamBreak.get();
+        //return false;
+        return !outtakeBeamBreak.get();
     }
 
     public boolean isIntakeBroken(){
-        return false;
-        //return !intakeBeamBreak.get();
+        //return false;
+        return !intakeBeamBreak.get();
     }
 
-    public boolean isElevatorLocked() {
-        return elevatorLocked;
-    }
+    // public boolean isElevatorLocked() {
+    //     return elevatorLocked;
+    // }
 
-    public boolean isReversing() {
-        return isReversing;
-    }
+    // public boolean isReversing() {
+    //     return isReversing;
+    // }
 
     public boolean isCoralInProcess() {
         return isCoralInProcess;

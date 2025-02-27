@@ -72,7 +72,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             // elevatorEncoder.setConnectedFrequencyThreshold(100);//
     
             // Initialize PID Controller
-            elevatorPID = new PIDController(0.15, 0.01, 0.00001); // Adjust constants as needed
+            elevatorPID = new PIDController(0.05, 0.01, 0.001); // Adjust constants as needed
             elevatorPID.setTolerance(0.025); // Allowable error range
     
             // Elastic Dashboard via NetworkTables
@@ -87,11 +87,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         // Setpoint method for PID control
         public void setElevatorPosition(double targetPosition) {
     
-            if (coralHandler.isElevatorLocked()) {
-                stop(); //stop movement if locked
-                System.out.println("Elevator is LOCKEd by Coral Handler");
-                return;
-            }
+            // if (coralHandler.isElevatorLocked()) {
+            //     stop(); //stop movement if locked
+            //     System.out.println("Elevator is LOCKEd by Coral Handler");
+            //     return;
+            // }
     
             if (isWithinBounds(targetPosition)) {
                 double currentVelocity = (targetPosition - getElevatorPosition()) / 0.02;

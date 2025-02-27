@@ -37,11 +37,11 @@ public class ElevatorCommand extends Command {
     @Override
     public void execute() {
 
-        if (elevatorSubsystem.coralHandler.isElevatorLocked()) {
-            elevatorSubsystem.stop();
-            System.out.println("Elevator Locked - Stopping Command");
-            return; // Skip the rest if locked
-        }
+        // if (elevatorSubsystem.coralHandler.isElevatorLocked()) {
+        //     elevatorSubsystem.stop();
+        //     System.out.println("Elevator Locked - Stopping Command");
+        //     return; // Skip the rest if locked
+        // }
 
         if (targetPosition != null) {
             elevatorSubsystem.setElevatorPosition(targetPosition);

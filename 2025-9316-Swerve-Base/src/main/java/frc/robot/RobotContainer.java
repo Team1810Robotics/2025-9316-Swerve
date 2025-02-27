@@ -83,7 +83,7 @@ public class RobotContainer {
     }
 
     private void setupShuffleboard() {
-        mainTab.addBoolean("Hopper Beam Break", () -> coralHandler.isHopperBroken())
+        mainTab.addBoolean("Hopper Beam Break1", () -> coralHandler.isHopperBroken())
             .withPosition(0,0).withSize(2,1);
 
         mainTab.addBoolean("Intake Beam Break", () -> coralHandler.isIntakeBroken())
@@ -92,8 +92,8 @@ public class RobotContainer {
         mainTab.addBoolean("Outtake Beam Break", () -> coralHandler.isOuttakeBroken())
             .withPosition(0,2).withSize(2,1);
 
-        mainTab.addBoolean("Elevator Locked", () -> coralHandler.isElevatorLocked())
-            .withPosition(0,3).withSize(2,1);
+        // mainTab.addBoolean("Elevator Locked", () -> coralHandler.isElevatorLocked())
+        //     .withPosition(0,3).withSize(2,1);
 
         mainTab.addNumber("Elevator Position", () -> elevatorSubsystem.getElevatorPosition())
             .withPosition(2,0).withSize(2,1);
@@ -101,8 +101,8 @@ public class RobotContainer {
         mainTab.addBoolean("Is Coral In Process", () -> coralHandler.isCoralInProcess())
             .withPosition(2,1).withSize(2,1);
 
-        mainTab.addBoolean("Is Reversing", () -> coralHandler.isReversing())
-            .withPosition(3,2).withSize(2,1);
+        // mainTab.addBoolean("Is Reversing", () -> coralHandler.isReversing())
+        //     .withPosition(3,2).withSize(2,1);
 
         
 
@@ -159,7 +159,7 @@ public class RobotContainer {
 
         //Eject Coral
         xbox.rightTrigger().whileTrue(new InstantCommand(() -> coralHandler.startOuttake()))
-                   .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
+                    .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
         // Manual Adjustments for Elevator
         xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
