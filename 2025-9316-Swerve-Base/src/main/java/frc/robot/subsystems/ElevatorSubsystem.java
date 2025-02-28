@@ -30,25 +30,29 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final ElevatorFeedforward elevatorFF;
     private static final double MAX_HEIGHT = 40;
     private static final double MIN_HEIGHT = 0;
-    public static final double INTAKE_POSITION = 1.175;
-    public static final double L1_POSITION = 6;        //10    
-    public static final double L2_POSITION = 10;        //18
-    public static final double L3_POSITION = 28;        //36
-    public static final double HIGH_ALGAE_POSITION = 70;  //64
+    public static final double INTAKE_POSITION = .5;
+    public static final double L1_POSITION = 10;        //10    
+    public static final double L2_POSITION = 26;        //18
+    public static final double Algae1 = 19;        //36
+    public static final double Algae2 = 36;        //36
+    public static final double climb = 40;        //36
     public static final double MANUAL_ADJUST_INCREMENT = 2.0; // Small adjustment for manual control
+    public static double targetPosition = 0;
+    public static double totalPower = 0;
         private static final double TICKS_PER_INCH = 185.0;
     
         private double lastRawValue = 0.0;
         private int rotationCount = 0;
+        public double pidOutput =0; 
     
         // Elastic Dashboard via NetworkTables
         private final NetworkTable dashboardTable;
         private final NetworkTableEntry positionEntry;
-        private final NetworkTableEntry currentEntry;
+        private static double elevatorPower;
     
         public final CoralHandlerSubsystem coralHandler;
 
-        private final DigitalInput intakeBeamBreak = new DigitalInput(CoralHandlerConstants.INTAKE_BEAM_BREAK_ID);
+        //private final DigitalInput intakeBeamBreak = new DigitalInput(CoralHandlerConstants.INTAKE_BEAM_BREAK_ID);
     
         public ElevatorSubsystem(CoralHandlerSubsystem coralHandler) {
             this.coralHandler = coralHandler;
@@ -76,20 +80,21 @@ public class ElevatorSubsystem extends SubsystemBase {
             // elevatorEncoder.setConnectedFrequencyThreshold(100);//
     
             // Initialize PID Controller
-            elevatorPID = new PIDController(0.05, 0.01, 0.001); // Adjust constants as needed
+            elevatorPID = new PIDController(0.225, 0.001, 0.01); // Adjust constants as needed
             elevatorPID.setTolerance(0.025); // Allowable error range
     
             // Elastic Dashboard via NetworkTables
             dashboardTable = NetworkTableInstance.getDefault().getTable("Elevator");
             positionEntry = dashboardTable.getEntry("Elevator Position");
-            currentEntry = dashboardTable.getEntry("Motor Current");
+            //elevatorPower = dashboardTable.getEntry("Motor Current");
 
             Shuffleboard.getTab("Elevator").addNumber("Encoder Raw", () -> -elevatorEncoder.get());
             Shuffleboard.getTab("Elevator").addNumber("Elevator Height", () -> getElevatorPosition());
         }
     
         // Setpoint method for PID control
-        public void setElevatorPosition(double targetPosition) {
+        public void setElevatorPosition(double Target) {
+            targetPosition = Target;
     
             // if (coralHandler.isElevatorLocked()) {
             //     stop(); //stop movement if locked
@@ -98,15 +103,19 @@ public class ElevatorSubsystem extends SubsystemBase {
             // }
     
             if (isWithinBounds(targetPosition)) { //MUST TUNE PID
-                double currentVelocity = (targetPosition - getElevatorPosition()) / 0.02;
+                 double ffv = (targetPosition - getElevatorPosition()) / 200;
                 double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
-                double feedforward = elevatorFF.calculate(currentVelocity); //apply feedforward
-                double totalPower = pidOutput /*+ feedforward*/;
+               double feedforward = elevatorFF.calculate(ffv); //apply feedforward
+               elevatorPower = pidOutput + 0;
                 //elevatorPID.calculate(getElevatorPosition(), targetPosition); //pre feedforward
-                if(intakeBeamBreak.get() && getElevatorPosition() < 1.5/*Adjust as needed */){
-                    elevatorMotor.set(totalPower);
-                }else{
+                if(coralHandler.isIntakeBroken() && getElevatorPosition() < 1.5/*Adjust as needed */){
                     stop();
+                }else{
+                    if(elevatorPower < 0){
+                        elevatorMotor.set(elevatorPower/100);
+                    }else{
+                        elevatorMotor.set(elevatorPower);
+                    }
                 }
             } else {
                 stop();
@@ -134,6 +143,14 @@ public class ElevatorSubsystem extends SubsystemBase {
                 return (totalRotations / TICKS_PER_INCH);
     }
 
+    public double getTargetPosition(){
+        return targetPosition;
+    }
+
+    public double getElevatorPower(){
+        return elevatorPower;
+    }
+
     public boolean isWithinBounds(double position) {
         return position >= MIN_HEIGHT && position <= MAX_HEIGHT;
     }
@@ -144,6 +161,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         double elevatorPosition = getElevatorPosition();
         //System.out.println("Elevator Position: " + elevatorPosition + "inches");
         positionEntry.setDouble(getElevatorPosition());
-        currentEntry.setDouble(elevatorMotor.getOutputCurrent());
+        //elevatorPower = elevatorMotor.getOutputCurrent();
+        
     }
 }

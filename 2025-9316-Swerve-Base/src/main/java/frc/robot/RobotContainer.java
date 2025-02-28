@@ -98,6 +98,12 @@ public class RobotContainer {
         mainTab.addNumber("Elevator Position", () -> elevatorSubsystem.getElevatorPosition())
             .withPosition(2,0).withSize(2,1);
 
+        mainTab.addNumber("Elevator Target", () -> elevatorSubsystem.getTargetPosition())
+            .withPosition(4,0).withSize(2,1);
+
+        mainTab.addNumber("Elevator Power", () -> elevatorSubsystem.getElevatorPower())
+            .withPosition(4,2).withSize(2,1);
+
         mainTab.addBoolean("Is Coral In Process", () -> coralHandler.isCoralInProcess())
             .withPosition(2,1).withSize(2,1);
 
@@ -148,10 +154,16 @@ public class RobotContainer {
         xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true));
 
         // Elevator Controls
+
+
         xbox.a().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));    // Intake
         xbox.b().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));        // L1
         xbox.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));        // L2
-        xbox.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L3_POSITION));        // L3
+        xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1));        // L3
+        xbox.leftBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2));        // L3
+
+        xbox.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));
+
         //xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.HIGH_ALGAE_POSITION)); // HighAlgae
 
         // Elevator Emergency Stop
