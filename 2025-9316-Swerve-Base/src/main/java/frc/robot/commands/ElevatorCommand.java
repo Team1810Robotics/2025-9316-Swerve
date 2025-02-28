@@ -15,26 +15,26 @@ public class ElevatorCommand extends Command {
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, double targetPosition) {
         this.elevatorSubsystem = elevatorSubsystem;
         this.targetPosition = targetPosition;
-        this.adjustment = 0;
+        this.adjustment = 0.0;
         addRequirements(elevatorSubsystem);
     }
 
     // Constructor for manual adjustment
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUp) {
-        adjustment = 0;
+        adjustment = 0.0;
         this.elevatorSubsystem = elevatorSubsystem;
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
-        this.targetPosition += adjustment;
+        targetPosition += adjustment;
         addRequirements(elevatorSubsystem);
     }
 
     @Override
     public void initialize() {
-        if (targetPosition != null) {
+        /*if (targetPosition != null) {
             System.out.println("Moving Elevator to: " + targetPosition);
         } else {
             System.out.println("Adjusting Elevator by: " + adjustment);
-        }
+        }*/
     }
 
     @Override
@@ -49,10 +49,12 @@ public class ElevatorCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (targetPosition != null) {
+        return false;
+        /*if (targetPosition != null) {
             return false;
         }
         return true; // Manual adjustments finish immediately after the adjustment
+    */
     }
 
     @Override
