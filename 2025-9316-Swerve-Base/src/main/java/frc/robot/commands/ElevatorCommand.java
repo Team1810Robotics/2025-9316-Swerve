@@ -15,15 +15,16 @@ public class ElevatorCommand extends Command {
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, double targetPosition) {
         this.elevatorSubsystem = elevatorSubsystem;
         this.targetPosition = targetPosition;
-        this.adjustment = null;
+        this.adjustment = 0;
         addRequirements(elevatorSubsystem);
     }
 
     // Constructor for manual adjustment
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUp) {
+        adjustment = 0;
         this.elevatorSubsystem = elevatorSubsystem;
-        this.targetPosition = null;
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
+        this.targetPosition += adjustment;
         addRequirements(elevatorSubsystem);
     }
 
@@ -39,17 +40,10 @@ public class ElevatorCommand extends Command {
     @Override
     public void execute() {
 
-        // if (elevatorSubsystem.coralHandler.isElevatorLocked()) {
-        //     elevatorSubsystem.stop();
-        //     System.out.println("Elevator Locked - Stopping Command");
-        //     return; // Skip the rest if locked
-        // }
-
-        if (targetPosition != null) {
+        if (adjustment = 0) {
             elevatorSubsystem.setElevatorPosition(targetPosition);
         } else {
-            double newSetpoint = elevatorSubsystem.getElevatorPosition() + adjustment;
-            elevatorSubsystem.setElevatorPosition(newSetpoint);
+            elevatorSubsystem.setElevatorPosition(targetPosition, true);
         }
     }
 
