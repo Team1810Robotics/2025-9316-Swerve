@@ -154,17 +154,11 @@ public class RobotContainer {
         xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true));
 
         // Elevator Controls
-
-
         xbox.a().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));    // Intake
         xbox.b().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));        // L1
         xbox.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));        // L2
         xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1));        // L3
         xbox.leftBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2));        // L3
-
-        xbox.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));
-
-        //xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.HIGH_ALGAE_POSITION)); // HighAlgae
 
         // Elevator Emergency Stop
         xbox.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));
