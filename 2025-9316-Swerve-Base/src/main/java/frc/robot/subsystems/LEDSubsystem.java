@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LEDSubsystem extends SubsystemBase {
-    private final CANdle m_candle = new CANdle(Constants.LEDConstants.CANDLE_ID);
+    private static CANdle m_candle = new CANdle(Constants.LEDConstants.CANDLE_ID);
     private final int LEDCount = Constants.LEDConstants.NUM_OF_LEDS;
     private Animation m_toAnimate = null;
 
@@ -53,6 +53,13 @@ public class LEDSubsystem extends SubsystemBase {
             case TwinkleOff: changeAnimation(AnimationTypes.ColorFlow); break;
             case SetAll: changeAnimation(AnimationTypes.ColorFlow); break;
         }
+    }
+
+    public void changeLEDColor(int[] colorCode) {
+         final int r = colorCode[0];
+         final int g = colorCode[1];
+         final int b = colorCode[2];
+        m_candle.setLEDs(r,g,b);
     }
 
     public void changeAnimation(AnimationTypes toChange) {
