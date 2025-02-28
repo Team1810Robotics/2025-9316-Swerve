@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.CoralHandlerConstants;
 import frc.robot.Constants.ElevatorConstants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -45,6 +47,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         private final NetworkTableEntry currentEntry;
     
         public final CoralHandlerSubsystem coralHandler;
+
+        private final DigitalInput intakeBeamBreak = new DigitalInput(CoralHandlerConstants.INTAKE_BEAM_BREAK_ID);
     
         public ElevatorSubsystem(CoralHandlerSubsystem coralHandler) {
             this.coralHandler = coralHandler;
@@ -93,13 +97,17 @@ public class ElevatorSubsystem extends SubsystemBase {
             //     return;
             // }
     
-            if (isWithinBounds(targetPosition)) {
+            if (isWithinBounds(targetPosition)) { //MUST TUNE PID
                 double currentVelocity = (targetPosition - getElevatorPosition()) / 0.02;
                 double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
                 double feedforward = elevatorFF.calculate(currentVelocity); //apply feedforward
                 double totalPower = pidOutput /*+ feedforward*/;
                 //elevatorPID.calculate(getElevatorPosition(), targetPosition); //pre feedforward
-                elevatorMotor.set(totalPower);
+                if(intakeBeamBreak.get() && getElevatorPosition() < 1.5/*Adjust as needed */){
+                    elevatorMotor.set(totalPower);
+                }else{
+                    stop();
+                }
             } else {
                 stop();
             }
