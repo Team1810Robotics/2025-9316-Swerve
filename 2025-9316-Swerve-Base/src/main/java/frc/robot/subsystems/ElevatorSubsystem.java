@@ -21,6 +21,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import frc.robot.Constants.LEDConstants;
+import frc.robot.subsystems.LEDSubsystem;
+
 
 public class ElevatorSubsystem extends SubsystemBase {
     private final SparkMax elevatorMotor;
@@ -41,6 +44,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     public static double totalPower = 0;
         private static final double TICKS_PER_INCH = 185.0;
     
+        public LEDSubsystem ledSubsystem;
+
         private double lastRawValue = 0.0;
         private int rotationCount = 0;
         public double pidOutput =0; 
@@ -54,9 +59,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         //private final DigitalInput intakeBeamBreak = new DigitalInput(CoralHandlerConstants.INTAKE_BEAM_BREAK_ID);
     
-        public ElevatorSubsystem(CoralHandlerSubsystem coralHandler) {
+        public ElevatorSubsystem(CoralHandlerSubsystem coralHandler, LEDSubsystem ledSubsystem) {
             this.coralHandler = coralHandler;
-    
+            this.ledSubsystem = ledSubsystem;
             // Initialize Motors
             elevatorMotor = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
             elevatorMotor2 = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
@@ -109,6 +114,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                     }
                 }
             } else {
+                setLEDColor(Constants.LEDConstants.RED, "red");
                 stop();
             }
         }
@@ -168,6 +174,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public boolean isWithinBounds(double position) {
         return position >= MIN_HEIGHT && position <= MAX_HEIGHT;
+    }
+
+    private void setLEDColor(int[] color, String colorName) {
+        // Placeholder for LED control
+        ledSubsystem.changeLEDColor(color, colorName);
+        System.out.println("LED Color: " + colorName);
     }
 
     @Override

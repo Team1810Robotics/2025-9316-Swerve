@@ -5,7 +5,10 @@ import com.revrobotics.jni.DistanceSensorJNIWrapper;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.AlgaeConstants;
+import frc.robot.Constants.CoralHandlerConstants;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -19,6 +22,8 @@ public class AlgaeSubsystem extends SubsystemBase {
    private SparkMax motor;
 
    public Rev2mDistanceSensor distanceSensor;
+   public LEDSubsystem ledSubsystem;
+
 
     public AlgaeSubsystem() {
         distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
@@ -40,7 +45,19 @@ public class AlgaeSubsystem extends SubsystemBase {
          } else {return -1;}
      }
 
+     private void setLEDColor(int[] color, String colorName) {
+        // Placeholder for LED control
+        ledSubsystem.changeLEDColor(color,colorName);
+        System.out.println("LED Color: " + colorName);
+    }
+
     public void stop(){
+        /* 
+        boolean intakeBroken // TO DO - ADD ALGAE LED COLORS
+          if (!intakeBroken){
+        setLEDColor(Constants.LEDConstants.GREEN, "green");
+        } 
+        */
         motor.stopMotor();
     }
 }
