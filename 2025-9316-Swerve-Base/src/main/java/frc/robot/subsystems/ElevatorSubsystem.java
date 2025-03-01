@@ -36,8 +36,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     public static final double INTAKE_POSITION = .5;
     public static final double L1_POSITION = 10;        //10    
     public static final double L2_POSITION = 26;        //18
-    public static final double Algae1 = 19;        //36
-    public static final double Algae2 = 36;        //36
+    public static final double Algae1 = 18.5;        //36
+    public static final double Algae2 = 35.5;        //36
     public static final double climb = 40;        //36
     public static final double MANUAL_ADJUST_INCREMENT = .5; // Small adjustment for manual control
     public static double targetPosition = 0;

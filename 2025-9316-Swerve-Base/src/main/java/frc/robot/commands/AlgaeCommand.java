@@ -41,16 +41,16 @@ public class AlgaeCommand extends Command {
            
             }else {
           
-                if (distance > 3 && distance <= 30) {
-                    algaeSubsystem.setSpeed(0.4);
-                    System.out.println("Algae trying to pull in");
-                } else if (distance <= 3 && distance > 0) {
-                    algaeSubsystem.setSpeed(0.05);
-                    System.out.println("Algae holding");
-                } else if (distance <= 0 || distance > 30) {
-                    algaeSubsystem.stop();
-                    System.out.println("Algae too far to see :()");
-                }
+                // if (distance > 3 && distance <= 30) {
+                //     algaeSubsystem.setSpeed(0.4);
+                //     //System.out.println("Algae trying to pull in");
+                // } else if (distance <= 3 && distance > 0) {
+                //     algaeSubsystem.setSpeed(0.05);
+                //     //System.out.println("Algae holding");
+                // } else if (distance <= 0 || distance > 30) {
+                //     algaeSubsystem.stop();
+                //    // System.out.println("Algae too far to see :()");
+                // }
 
             }
         }
