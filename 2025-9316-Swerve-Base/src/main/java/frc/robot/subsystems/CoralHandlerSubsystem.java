@@ -39,7 +39,10 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
 
     public CoralHandlerSubsystem() {
-        LEDSubsystem ledSubsystem;
+        boolean intakeBroken = !intakeBeamBreak.get();
+        if (!intakeBroken){
+        setLEDColor(Constants.LEDConstants.YELLOW, "yellow");
+        }
         coralHandlerMotor.set(0); // Ensure motor starts off
     }
 
