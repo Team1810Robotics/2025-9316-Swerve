@@ -83,12 +83,13 @@ public class Constants {
     }
 
     public static final class LEDConstants {
-        public static final double[] YELLOW = {245, 239, 66}; // RGB values
-        public static final double[] WHITE = {255, 255, 255}; // RGB values
-        public static final double[] ORANGE = {255, 128, 0}; // RGB values
-        public static final double[] GREEN = {60, 255, 0}; // RGB values
+        public static final int[] RED = {255, 0, 0}; // RGB values
+        public static final int[] YELLOW = {245, 239, 66}; // RGB values
+        public static final int[] WHITE = {255, 255, 255}; // RGB values
+        public static final int[] ORANGE = {255, 128, 0}; // RGB values
+        public static final int[] GREEN = {60, 255, 0}; // RGB values
         public static final int CANDLE_ID = 35; // CAN ID
-        public static final int NUM_OF_LEDS = 100; //Number of LEDs
+        public static final int NUM_OF_LEDS = 192; //Number of LEDs
         public static final int MAX_BRIGHTNESS_ANGLE = 90; // Units? (e.g., degrees)
         public static final int MID_BRIGHTNESS_ANGLE = 180; // Units?
         public static final int ZERO_BRIGHTNESS_ANGLE = 270; // Units?

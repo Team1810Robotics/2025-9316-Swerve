@@ -21,6 +21,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import frc.robot.Constants.LEDConstants;
+import frc.robot.subsystems.LEDSubsystem;
+
 
 public class ElevatorSubsystem extends SubsystemBase {
     private final SparkMax elevatorMotor;
@@ -36,11 +39,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     public static final double Algae1 = 19;        //36
     public static final double Algae2 = 36;        //36
     public static final double climb = 40;        //36
-    public static final double MANUAL_ADJUST_INCREMENT = 2.0; // Small adjustment for manual control
+    public static final double MANUAL_ADJUST_INCREMENT = .5; // Small adjustment for manual control
     public static double targetPosition = 0;
     public static double totalPower = 0;
         private static final double TICKS_PER_INCH = 185.0;
     
+        public LEDSubsystem ledSubsystem;
+
         private double lastRawValue = 0.0;
         private int rotationCount = 0;
         public double pidOutput =0; 
@@ -54,9 +59,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         //private final DigitalInput intakeBeamBreak = new DigitalInput(CoralHandlerConstants.INTAKE_BEAM_BREAK_ID);
     
-        public ElevatorSubsystem(CoralHandlerSubsystem coralHandler) {
+        public ElevatorSubsystem(CoralHandlerSubsystem coralHandler, LEDSubsystem ledSubsystem) {
             this.coralHandler = coralHandler;
-    
+            this.ledSubsystem = ledSubsystem;
             // Initialize Motors
             elevatorMotor = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
             elevatorMotor2 = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
@@ -96,23 +101,39 @@ public class ElevatorSubsystem extends SubsystemBase {
         public void setElevatorPosition(double Target) {
             targetPosition = Target;
     
-            // if (coralHandler.isElevatorLocked()) {
-            //     stop(); //stop movement if locked
-            //     System.out.println("Elevator is LOCKEd by Coral Handler");
-            //     return;
-            // }
-    
-            if (isWithinBounds(targetPosition)) { //MUST TUNE PID
-                 double ffv = (targetPosition - getElevatorPosition()) / 200;
+            if (isWithinBounds(targetPosition)) { 
                 double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
-               double feedforward = elevatorFF.calculate(ffv); //apply feedforward
-               elevatorPower = pidOutput + 0;
-                //elevatorPID.calculate(getElevatorPosition(), targetPosition); //pre feedforward
-                if(coralHandler.isIntakeBroken() && getElevatorPosition() < 1.5/*Adjust as needed */){
+               elevatorPower = pidOutput;
+                if(coralHandler.isIntakeBroken() && getElevatorPosition() < 1.5){
                     stop();
                 }else{
                     if(elevatorPower < 0){
                         elevatorMotor.set(elevatorPower/100);
+                    }else{
+                        elevatorMotor.set(elevatorPower);
+                    }
+                }
+            } else {
+                setLEDColor(Constants.LEDConstants.RED, "red");
+                stop();
+            }
+        }
+
+    public void setElevatorPosition(double Target, boolean climb) {
+            targetPosition = Target;
+    
+            if (isWithinBounds(targetPosition)) { 
+                double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
+               elevatorPower = pidOutput;
+                if(coralHandler.isIntakeBroken() && getElevatorPosition() < 1.5){
+                    stop();
+                }else{
+                    if(elevatorPower < 0){
+                        if(climb){
+                            elevatorMotor.set(elevatorPower);
+                        }else{
+                            elevatorMotor.set(elevatorPower/100);
+                        }
                     }else{
                         elevatorMotor.set(elevatorPower);
                     }
@@ -153,6 +174,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public boolean isWithinBounds(double position) {
         return position >= MIN_HEIGHT && position <= MAX_HEIGHT;
+    }
+
+    private void setLEDColor(int[] color, String colorName) {
+        // Placeholder for LED control
+        ledSubsystem.changeLEDColor(color, colorName);
+        System.out.println("LED Color: " + colorName);
     }
 
     @Override

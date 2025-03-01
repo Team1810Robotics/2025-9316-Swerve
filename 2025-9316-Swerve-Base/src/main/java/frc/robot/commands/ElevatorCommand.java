@@ -8,57 +8,52 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class ElevatorCommand extends Command {
 
     private final ElevatorSubsystem elevatorSubsystem;
-    private final Double targetPosition;
-    private final Double adjustment;  // For manual adjustment
+    private double targetPosition;
+    private double adjustment;  // For manual adjustment
 
     // Constructor for set positions
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, double targetPosition) {
         this.elevatorSubsystem = elevatorSubsystem;
         this.targetPosition = targetPosition;
-        this.adjustment = null;
+        this.adjustment = 0.0;
         addRequirements(elevatorSubsystem);
     }
 
     // Constructor for manual adjustment
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUp) {
+        adjustment = 0.0;
         this.elevatorSubsystem = elevatorSubsystem;
-        this.targetPosition = null;
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
+        targetPosition += adjustment;
         addRequirements(elevatorSubsystem);
     }
 
     @Override
     public void initialize() {
-        if (targetPosition != null) {
+/*         if (targetPosition != null) {
             System.out.println("Moving Elevator to: " + targetPosition);
         } else {
             System.out.println("Adjusting Elevator by: " + adjustment);
-        }
+        } */
     }
 
     @Override
     public void execute() {
 
-        // if (elevatorSubsystem.coralHandler.isElevatorLocked()) {
-        //     elevatorSubsystem.stop();
-        //     System.out.println("Elevator Locked - Stopping Command");
-        //     return; // Skip the rest if locked
-        // }
-
-        if (targetPosition != null) {
+        if (adjustment == 0) {
             elevatorSubsystem.setElevatorPosition(targetPosition);
         } else {
-            double newSetpoint = elevatorSubsystem.getElevatorPosition() + adjustment;
-            elevatorSubsystem.setElevatorPosition(newSetpoint);
+            elevatorSubsystem.setElevatorPosition(targetPosition, true);
         }
     }
 
     @Override
     public boolean isFinished() {
-        if (targetPosition != null) {
+        return false;
+        /* if (targetPosition != null) {
             return false;
         }
-        return true; // Manual adjustments finish immediately after the adjustment
+        return true; // Manual adjustments finish immediately after the adjustment */
     }
 
     @Override
