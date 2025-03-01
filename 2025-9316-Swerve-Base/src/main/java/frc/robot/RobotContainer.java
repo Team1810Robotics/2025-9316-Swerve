@@ -88,8 +88,8 @@ public class RobotContainer {
         configureAutoChooser();
         setupShuffleboard();
          
-        // NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
-        // NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
+        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
+        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
     }
 
     private void setupShuffleboard() {
@@ -205,18 +205,18 @@ public class RobotContainer {
 
     private void configureAutoChooser() {
         // Set default option
-      //  autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
+        autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
 
         // Add PathPlanner paths
-      //  autoChooser.addOption("2 Left Auto", AutoSubsystem.getAutoCommand("2LeftAuto"));
+    //  autoChooser.addOption("score1", AutoSubsystem.getAutoCommand("score1"));
       //  autoChooser.addOption("2 Right Auto", AutoSubsystem.getAutoCommand("2RightAuto"));
       //  autoChooser.addOption("Left Auto", AutoSubsystem.getAutoCommand("LeftAuto"));
       //  autoChooser.addOption("Right Auto", AutoSubsystem.getAutoCommand("RightAuto"));
       //  autoChooser.addOption("Middle Auto", AutoSubsystem.getAutoCommand("MiddleAuto"));
 
         // Display on SmartDashboard
-       // SmartDashboard.putData("Auto choices", autoChooser);
-		//Shuffleboard.getTab("Autonomous").add(autoChooser);
+       SmartDashboard.putData("Auto choices", autoChooser);
+		Shuffleboard.getTab("Autonomous").add(autoChooser);
     }
     public Command getAutonomousCommand() {
         if (autoChooser.getSelected() != null){
