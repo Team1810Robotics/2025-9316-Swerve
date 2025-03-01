@@ -145,8 +145,8 @@ public class RobotContainer {
         );
 
 
-           xbox.leftBumper().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
-           xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
+           xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
+           joystick.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
            joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
            joystick.b().whileTrue(drivetrain.applyRequest(() ->
 

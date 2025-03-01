@@ -41,7 +41,9 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     
 
 
-    public CoralHandlerSubsystem() {
+    public CoralHandlerSubsystem(LEDSubsystem 
+    ledSubsystem) {
+        this.ledSubsystem = ledSubsystem;
         SparkMaxConfig config_ = new SparkMaxConfig();
         config_.idleMode(SparkBaseConfig.IdleMode.kBrake);
         coralHandlerMotor.set(0);
