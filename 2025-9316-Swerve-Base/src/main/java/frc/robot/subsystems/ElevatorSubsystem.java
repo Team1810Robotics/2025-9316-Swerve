@@ -59,9 +59,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         //private final DigitalInput intakeBeamBreak = new DigitalInput(CoralHandlerConstants.INTAKE_BEAM_BREAK_ID);
     
-        public ElevatorSubsystem(CoralHandlerSubsystem coralHandler) {
+        public ElevatorSubsystem(CoralHandlerSubsystem coralHandler, LEDSubsystem ledSubsystem) {
             this.coralHandler = coralHandler;
-    
+            this.ledSubsystem = ledSubsystem;
             // Initialize Motors
             elevatorMotor = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
             elevatorMotor2 = new SparkMax(Constants.ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
@@ -178,7 +178,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void setLEDColor(int[] color, String colorName) {
         // Placeholder for LED control
-        ledSubsystem.changeLEDColor(color);
+        ledSubsystem.changeLEDColor(color, colorName);
         System.out.println("LED Color: " + colorName);
     }
 

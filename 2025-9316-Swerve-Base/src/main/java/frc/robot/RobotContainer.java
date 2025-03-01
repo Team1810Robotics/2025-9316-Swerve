@@ -77,7 +77,7 @@ public class RobotContainer {
     public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
     
     
-    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler); // Initialize Elevator Subsystem
+    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
    public RobotContainer(){
         algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false));

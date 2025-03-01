@@ -47,7 +47,7 @@ public class AlgaeSubsystem extends SubsystemBase {
 
      private void setLEDColor(int[] color, String colorName) {
         // Placeholder for LED control
-        ledSubsystem.changeLEDColor(color);
+        ledSubsystem.changeLEDColor(color,colorName);
         System.out.println("LED Color: " + colorName);
     }
 
