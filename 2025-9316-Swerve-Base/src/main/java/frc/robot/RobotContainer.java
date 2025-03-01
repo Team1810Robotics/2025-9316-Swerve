@@ -80,7 +80,7 @@ public class RobotContainer {
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
    public RobotContainer(){
-        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false));
+        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
         setElastic();
         configureBindings();
         configureAutoChooser();
@@ -144,8 +144,12 @@ public class RobotContainer {
             )
         );
 
-            joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-            joystick.b().whileTrue(drivetrain.applyRequest(() ->
+
+           xbox.leftBumper().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
+           xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
+           joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+           joystick.b().whileTrue(drivetrain.applyRequest(() ->
+
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
