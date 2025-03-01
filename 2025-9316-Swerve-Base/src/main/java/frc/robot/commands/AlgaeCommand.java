@@ -12,7 +12,6 @@ public class AlgaeCommand extends Command {
     public AlgaeCommand(AlgaeSubsystem algaeSubsystem, boolean eject,boolean intake){
         this.algaeSubsystem = algaeSubsystem;
         this.eject = eject;
-        // this.algaeSubsystem = algaeSubsystem;
         this.intake = intake;
         addRequirements(algaeSubsystem);
     }
