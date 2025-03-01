@@ -19,12 +19,14 @@ public class ElevatorCommand extends Command {
         addRequirements(elevatorSubsystem);
     }
 
-    // Constructor for manual adjustment
+    // TODO make manual adjustment work
+    // Currently instead of setting the target position to the manual adjust it instead sets it to -.5 or .5
+    //I actually just made some changes but they prob still will not work - needs testing
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUp) {
-        adjustment = 0.0;
+        this.adjustment = 0.0;
         this.elevatorSubsystem = elevatorSubsystem;
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
-        targetPosition += adjustment;
+        this.targetPosition += this.adjustment;
         addRequirements(elevatorSubsystem);
     }
 
@@ -42,8 +44,8 @@ public class ElevatorCommand extends Command {
 
         if (adjustment == 0) {
             elevatorSubsystem.setElevatorPosition(targetPosition);
-        } else {
-            elevatorSubsystem.setElevatorPosition(targetPosition, true);
+        } else {//TODO make manual adjustment work
+            //elevatorSubsystem.setElevatorPosition(targetPosition, true);
         }
     }
 

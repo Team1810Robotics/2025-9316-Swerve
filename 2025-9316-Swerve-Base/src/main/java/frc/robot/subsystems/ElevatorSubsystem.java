@@ -118,7 +118,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                 stop();
             }
         }
-
+    /* DO NOT USE THIS CODE UNLESS YOU REALLY KNOW WHAT UR DOING :p
     public void setElevatorPosition(double Target, boolean climb) {
             targetPosition = Target;
     
@@ -142,6 +142,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                 stop();
             }
         }
+            */
     
         public void stop() {
             elevatorMotor.set(0);

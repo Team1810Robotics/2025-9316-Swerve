@@ -117,7 +117,13 @@ public class RobotContainer {
             .withPosition(2,1).withSize(2,1);
 
         mainTab.addString("LED", () -> ledSubsystem.getLEDColor())
-            .withPosition(2,1).withSize(2,1);
+            .withPosition(2,2).withSize(2,1);
+
+        mainTab.addBoolean("isValidDistance", () -> algaeSubsystem.getIsValidRange())
+            .withPosition(6,0).withSize(2,1);
+
+        mainTab.addDouble("distance Sensor", () -> algaeSubsystem.getDistanceSensor())
+            .withPosition(6,1).withSize(2,1);
 
 
         // mainTab.addBoolean("Is Reversing", () -> coralHandler.isReversing())
@@ -142,9 +148,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/4) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/4) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/8) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/6) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/6) // Drive left with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/10) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -187,8 +193,9 @@ public class RobotContainer {
                     .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
         // Manual Adjustments for Elevator
-        xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
-        xbox.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+        //DO NOT USE
+        //xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
+        //xbox.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
         
 
         drivetrain.registerTelemetry(logger::telemeterize);
