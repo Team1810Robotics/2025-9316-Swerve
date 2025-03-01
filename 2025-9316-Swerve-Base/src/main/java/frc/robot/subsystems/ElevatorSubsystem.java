@@ -113,7 +113,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             }
         }
 
-    public void setElevatorPosition(double Target, bool climb) {
+    public void setElevatorPosition(double Target, boolean climb) {
             targetPosition = Target;
     
             if (isWithinBounds(targetPosition)) { 
