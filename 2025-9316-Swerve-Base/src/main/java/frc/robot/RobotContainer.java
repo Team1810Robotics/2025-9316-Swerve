@@ -11,6 +11,7 @@ import java.util.HashMap;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,7 +29,7 @@ import frc.robot.commands.ElevatorCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeSubsystem;
-import frc.robot.subsystems.AutoSubsystem;
+import frc.robot.subsystems.AutoSubsystem; //this thingy
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralHandlerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -40,6 +41,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.RestClient;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.AutoSubsystem;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.RestClient;
@@ -85,6 +87,8 @@ public class RobotContainer {
         configureBindings();
         configureAutoChooser();
         setupShuffleboard();
+        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
+        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
     }
 
     private void setupShuffleboard() {
@@ -190,6 +194,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+
     private void configureAutoChooser() {
         // Set default option
       //  autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
@@ -202,13 +207,14 @@ public class RobotContainer {
       //  autoChooser.addOption("Middle Auto", AutoSubsystem.getAutoCommand("MiddleAuto"));
 
         // Display on SmartDashboard
-        //SmartDashboard.putData("Auto choices", autoChooser);
+       // SmartDashboard.putData("Auto choices", autoChooser);
+		//Shuffleboard.getTab("Autonomous").add(autoChooser);
     }
     public Command getAutonomousCommand() {
-     //    if (autoChooser.getSelected() != null){
-     //       return autoChooser.getSelected();
-     //   } else {
+        if (autoChooser.getSelected() != null){
+            return autoChooser.getSelected();
+        } else {
             return Commands.print("No autonomous command configured, if a path was chosen, this is an error.");
-     //   }
+        }
     }
 }

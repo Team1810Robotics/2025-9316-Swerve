@@ -17,5 +17,27 @@ public class AutoSubsystem extends SubsystemBase{
         logger.info("Auto Selected: " + autoName);
         return AutoBuilder.buildAuto(autoName); // Load PathPlanner auto
     }
-}
+    public enum AutoMode {
+        ReefProcessor, // Auto
+        StartReef,
+    }
+    public static Command getAutoCommand(AutoMode autoMode) {
+        String autoName = autoMode.name();
+        logger.info("Auto Selected: " + autoName);
+        
+        Command autoCommand = AutoBuilder.buildAuto(autoName);
+        if (autoCommand == null) {
+            logger.severe("Failed to build auto command for: " + autoName);
+        }
+        return autoCommand; // Load PathPlanner auto
+    }
+    public static Command ReefProcessor() {
+    logger.info("Executing Reef Processor Auto Mode");
+    throw new UnsupportedOperationException("Unimplemented method 'ReefProcessor'");
+    }
 
+    public static Command AutoExchange() {
+        logger.info("Executing AutoExchange");
+        throw new UnsupportedOperationException("Unimplemented method 'AutoExchange'");
+    }
+}
