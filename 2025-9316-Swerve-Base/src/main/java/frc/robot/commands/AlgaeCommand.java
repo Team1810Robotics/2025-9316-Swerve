@@ -1,7 +1,5 @@
 package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.AlgaeSubsystem;
 
 @SuppressWarnings("unused")
@@ -53,6 +51,7 @@ public class AlgaeCommand extends Command {
                     algaeSubsystem.stop();
                     System.out.println("Algae too far to see :()");
                 }
+
             }
         }
        

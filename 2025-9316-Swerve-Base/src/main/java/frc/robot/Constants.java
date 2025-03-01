@@ -3,12 +3,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 import com.revrobotics.spark.SparkMax;
-
+import frc.robot.subsystems.CoralHandlerSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.XboxController;
 
+@SuppressWarnings("unused")
 public class Constants {
 
     public static final class ElevatorConstants {
@@ -17,12 +18,14 @@ public class Constants {
         public static final int ELEVATOR_MOTOR_1_ID = 10; // Motor ID
         public static final int ELEVATOR_MOTOR_2_ID = 9;  // Motor ID
         public static final int ELEVATOR_ENCODER_PORT = 9; // Encoder port
-        public static final int smartCurrentLimit = 40;
+        public static final int smartCurrentLimit = 60;
+
         public static final class ElevatorLeft {
             public static final int kFollowerModeLeaderId = 9;
             public static final boolean kFollowerModeIsInverted = true;
         }
-        public static final class ElevatorRight {
+
+        public static final class ElevatorRight { 
             public static final int kCanID = 9;
             public static final int kInputMode = 1;
             public static final int kIdleMode = 1;
@@ -62,7 +65,7 @@ public class Constants {
         public static final double CAMERA_PITCH = 0.0; // Units? (e.g., degrees)
 
         public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
-                AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+                AprilTagFields.k2025ReefscapeAndyMark.loadAprilTagLayoutField();
         public static final Transform3d CAMERA_OFFSET = null; // Units?
 		//Vision Rotation PID variables
         public static final double V_Kp = 0.05; // PID Kp
@@ -80,12 +83,13 @@ public class Constants {
     }
 
     public static final class LEDConstants {
-        public static final double[] YELLOW = {245, 239, 66}; // RGB values
-        public static final double[] WHITE = {255, 255, 255}; // RGB values
-        public static final double[] ORANGE = {255, 128, 0}; // RGB values
-        public static final double[] GREEN = {60, 255, 0}; // RGB values
+        public static final int[] RED = {255, 0, 0}; // RGB values
+        public static final int[] YELLOW = {245, 239, 66}; // RGB values
+        public static final int[] WHITE = {255, 255, 255}; // RGB values
+        public static final int[] ORANGE = {255, 128, 0}; // RGB values
+        public static final int[] GREEN = {60, 255, 0}; // RGB values
         public static final int CANDLE_ID = 35; // CAN ID
-        public static final int NUM_OF_LEDS = 100; //Number of LEDs
+        public static final int NUM_OF_LEDS = 192; //Number of LEDs
         public static final int MAX_BRIGHTNESS_ANGLE = 90; // Units? (e.g., degrees)
         public static final int MID_BRIGHTNESS_ANGLE = 180; // Units?
         public static final int ZERO_BRIGHTNESS_ANGLE = 270; // Units?
