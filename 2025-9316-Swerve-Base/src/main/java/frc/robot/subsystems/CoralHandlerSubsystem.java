@@ -79,6 +79,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
         if (hopperBroken) {
             isCoralInProcess = true;
+            setLEDColor(Constants.LEDConstants.BLUE,"Blue"); // Idle
             System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
             coralHandlerMotor.set(.35);
         }

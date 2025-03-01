@@ -174,7 +174,7 @@ public class RobotContainer {
         // reset the field-centric heading on a button press
         joystick.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // Algae Control - Driver controls intake, manipulator controls eject
+        // Algae Control - Driver controls intake, manipulator controls eject 
         joystick.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false,true));
         xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true,false));
         
