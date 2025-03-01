@@ -70,10 +70,12 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final CoralHandlerSubsystem coralHandler = new CoralHandlerSubsystem();
+   
     
-    public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
     public final LEDSubsystem ledSubsystem = new LEDSubsystem();
+    private final CoralHandlerSubsystem coralHandler = new CoralHandlerSubsystem(ledSubsystem);
+    public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
+    
     
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler); // Initialize Elevator Subsystem
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
