@@ -24,7 +24,7 @@ public class ElevatorCommand extends Command {
         adjustment = 0.0;
         this.elevatorSubsystem = elevatorSubsystem;
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
-        this.targetPosition += adjustment;
+        targetPosition += adjustment;
         addRequirements(elevatorSubsystem);
     }
 
