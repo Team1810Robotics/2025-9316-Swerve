@@ -80,7 +80,7 @@ public class RobotContainer {
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
    public RobotContainer(){
-        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false));
+        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
         setElastic();
         configureBindings();
         configureAutoChooser();
@@ -140,12 +140,16 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/4) // Drive forward with negative Y (forward)
                     .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/4) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/4) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/8) // Drive counterclockwise with negative X (left)
             )
         );
 
-            joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-            joystick.b().whileTrue(drivetrain.applyRequest(() ->
+
+           xbox.leftBumper().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
+           xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
+           joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+           joystick.b().whileTrue(drivetrain.applyRequest(() ->
+
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
