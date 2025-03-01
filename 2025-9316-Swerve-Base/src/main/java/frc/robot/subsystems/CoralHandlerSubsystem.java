@@ -10,7 +10,10 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.Constants;
 import frc.robot.Constants.CoralHandlerConstants;
+import frc.robot.Constants.LEDConstants;
 
 public class CoralHandlerSubsystem extends SubsystemBase {
 
@@ -34,6 +37,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
     // Track if coral is passing through
     private boolean isCoralInProcess = false;
+    public LEDSubsystem ledSubsystem;
     
 
 
@@ -47,12 +51,14 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     // //Start Intake//
     public void startIntake() {
         coralHandlerMotor.set(0.5);
+        setLEDColor(Constants.LEDConstants.ORANGE, "orange");
         System.out.println("Coral Handler Intake Active");
     }
 
     //Start Outtake//
     public void startOuttake() {
         coralHandlerMotor.set(0.5);
+        setLEDColor(Constants.LEDConstants.ORANGE, "yellow");
         System.out.println("Coral Handler Outtake Active");
     }
 
@@ -169,14 +175,15 @@ public class CoralHandlerSubsystem extends SubsystemBase {
         return isCoralInProcess;
     }
 
-    private void setLEDColor(String color) {
+    private void setLEDColor(int[] color, String colorName) {
         // Placeholder for LED control
-        System.out.println("LED Color: " + color);
+        ledSubsystem.changeLEDColor(color, colorName);
+        System.out.println("LED Color: " + colorName);
     }
 
     public void stopCoralHandler() {
         coralHandlerMotor.set(0);
-        setLEDColor("GREEN"); // Idle
+        setLEDColor(Constants.LEDConstants.GREEN,"Green"); // Idle
         System.out.println("Coral Handler Stopped");
     }
 }
