@@ -1,18 +1,23 @@
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.AlgaeSubsystem;
 
+@SuppressWarnings("unused")
 public class AlgaeCommand extends Command {
     private AlgaeSubsystem algaeSubsystem;
  private boolean eject;
-    public AlgaeCommand(AlgaeSubsystem algaeSubsystem, boolean eject){
+ private boolean intake;
+    public AlgaeCommand(AlgaeSubsystem algaeSubsystem, boolean eject,boolean intake){
         this.algaeSubsystem = algaeSubsystem;
         this.eject = eject;
+        // this.algaeSubsystem = algaeSubsystem;
+        this.intake = intake;
         addRequirements(algaeSubsystem);
     }
+    
+    
  
     @Override
     public void initialize() {
@@ -30,21 +35,25 @@ public class AlgaeCommand extends Command {
          * if the distance is less than 8 cm then the motor runs slowly.
          */
         double distance = algaeSubsystem.getDistanceSensor();
-
-        if (eject){
-            algaeSubsystem.setSpeed(-1);
+        if (intake){
+            algaeSubsystem.setSpeed(0.4);
            
-        }else {
+        }else{
+            if (eject){
+                algaeSubsystem.setSpeed(-1);
+           
+            }else {
           
-            if (distance > 3 && distance <= 30) {
-                algaeSubsystem.setSpeed(0.4);
-                System.out.println("Algae trying to pull in");
-            } else if (distance <= 3 && distance > 0) {
-                algaeSubsystem.setSpeed(0.05);
-                System.out.println("Algae holding");
-            } else if (distance <= 0 || distance > 30) {
-                algaeSubsystem.stop();
-                System.out.println("Algae too far to see :()");
+                if (distance > 3 && distance <= 30) {
+                    algaeSubsystem.setSpeed(0.4);
+                    System.out.println("Algae trying to pull in");
+                } else if (distance <= 3 && distance > 0) {
+                    algaeSubsystem.setSpeed(0.05);
+                    System.out.println("Algae holding");
+                } else if (distance <= 0 || distance > 30) {
+                    algaeSubsystem.stop();
+                    System.out.println("Algae too far to see :()");
+                }
             }
         }
        
