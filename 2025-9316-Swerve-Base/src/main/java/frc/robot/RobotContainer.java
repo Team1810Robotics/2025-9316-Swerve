@@ -89,6 +89,8 @@ public class RobotContainer {
         setupShuffleboard();
         NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
         NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
+        NamedCommands.registerCommand("NoVisionScore", AutoSubsystem.NoVisionScore());
+
     }
 
     private void setupShuffleboard() {

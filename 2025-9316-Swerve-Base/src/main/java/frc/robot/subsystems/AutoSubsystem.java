@@ -40,4 +40,8 @@ public class AutoSubsystem extends SubsystemBase{
         logger.info("Executing AutoExchange");
         throw new UnsupportedOperationException("Unimplemented method 'AutoExchange'");
     }
+    public static Command NoVisionScore() {
+        logger.info("Executing NoVisionScore");
+        throw new UnsupportedOperationException("Unimplemented method 'NoVisionScore'");
+    }
 }

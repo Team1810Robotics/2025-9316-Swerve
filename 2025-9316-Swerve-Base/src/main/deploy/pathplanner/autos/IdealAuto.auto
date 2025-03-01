@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "gotocenter"
+            "pathName": "StartReef"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "gotoproccessor"
+            "pathName": "ReefProcessor"
           }
         },
         {
