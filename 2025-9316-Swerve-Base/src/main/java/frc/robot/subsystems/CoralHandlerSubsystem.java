@@ -38,11 +38,9 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     
 
 
-    public CoralHandlerSubsystem() {
-        boolean intakeBroken = !intakeBeamBreak.get();
-        if (!intakeBroken){
-        setLEDColor(Constants.LEDConstants.YELLOW, "yellow");
-        }
+
+    public CoralHandlerSubsystem(LEDSubsystem ledSubsystem) {
+        this.ledSubsystem = ledSubsystem;
         coralHandlerMotor.set(0); // Ensure motor starts off
     }
 
@@ -175,7 +173,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
     private void setLEDColor(int[] color, String colorName) {
         // Placeholder for LED control
-        ledSubsystem.changeLEDColor(color);
+        ledSubsystem.changeLEDColor(color, colorName);
         System.out.println("LED Color: " + colorName);
     }
 

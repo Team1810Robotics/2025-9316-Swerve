@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
@@ -10,6 +12,7 @@ import frc.robot.Constants;
 public class LEDSubsystem extends SubsystemBase {
     private static CANdle m_candle = new CANdle(Constants.LEDConstants.CANDLE_ID);
     private final int LEDCount = Constants.LEDConstants.NUM_OF_LEDS;
+    public static String  strLEDColor = "";
     private Animation m_toAnimate = null;
 
     public enum AnimationTypes {
@@ -55,7 +58,7 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    public void changeLEDColor(int[] colorCode) {
+    public void changeLEDColor(int[] colorCode, String colorName ) {
          final int r = colorCode[0];
          final int g = colorCode[1];
          final int b = colorCode[2];
@@ -98,14 +101,19 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
         }
         System.out.println("Changed to " + m_currentAnimation.toString());
+    
+    }
+
+    public String getLEDColor(){
+        return LEDSubsystem.strLEDColor;
     }
     @Override
     public void periodic(){
-        if (m_toAnimate == null){
+     /*   if (m_toAnimate == null){
             m_candle.setLEDs(0,0,255); //Blue (Default)
         }else{
             m_candle.animate(m_toAnimate);
-        }
+        }*/
     }
     
 }

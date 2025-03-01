@@ -32,6 +32,8 @@ import frc.robot.subsystems.AutoSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralHandlerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -68,9 +70,12 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final CoralHandlerSubsystem coralHandler = new CoralHandlerSubsystem();
+   
     
+    public final LEDSubsystem ledSubsystem = new LEDSubsystem();
+    private final CoralHandlerSubsystem coralHandler = new CoralHandlerSubsystem(ledSubsystem);
     public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
+    
     
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler); // Initialize Elevator Subsystem
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -107,6 +112,10 @@ public class RobotContainer {
         mainTab.addBoolean("Is Coral In Process", () -> coralHandler.isCoralInProcess())
             .withPosition(2,1).withSize(2,1);
 
+        mainTab.addString("LED", () -> ledSubsystem.getLEDColor())
+            .withPosition(2,1).withSize(2,1);
+
+
         // mainTab.addBoolean("Is Reversing", () -> coralHandler.isReversing())
         //     .withPosition(3,2).withSize(2,1);
 
@@ -129,9 +138,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/4) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/4) // Drive left with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/4) // Drive counterclockwise with negative X (left)
             )
         );
 
