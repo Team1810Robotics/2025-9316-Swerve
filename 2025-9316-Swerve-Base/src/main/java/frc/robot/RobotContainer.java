@@ -164,7 +164,9 @@ public class RobotContainer {
         joystick.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Algae Control
-        xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true));
+        xbox.leftBumper().whileTrue(new AlgaeCommand(algaeSubsystem, false,true));
+        xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true,false));
+        
 
         // Elevator Controls
         xbox.a().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));    // Intake
