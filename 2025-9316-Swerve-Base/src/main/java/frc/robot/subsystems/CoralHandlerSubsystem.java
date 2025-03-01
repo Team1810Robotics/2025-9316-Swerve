@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.Constants.CoralHandlerConstants;
 
@@ -35,7 +38,10 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
 
     public CoralHandlerSubsystem() {
-        coralHandlerMotor.set(0); // Ensure motor starts off
+        SparkMaxConfig config_ = new SparkMaxConfig();
+        config_.idleMode(SparkBaseConfig.IdleMode.kBrake);
+        coralHandlerMotor.set(0);
+        coralHandlerMotor.configure(config_, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters); // Ensure motor starts off
     }
 
     // //Start Intake//
@@ -66,7 +72,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
         if (hopperBroken) {
             isCoralInProcess = true;
             System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
-            coralHandlerMotor.set(.25);
+            coralHandlerMotor.set(.35);
         }
 
         if (!intakeBroken && !hopperBroken && isCoralInProcess) {

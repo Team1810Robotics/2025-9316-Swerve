@@ -103,10 +103,10 @@ public class ElevatorSubsystem extends SubsystemBase {
             // }
     
             if (isWithinBounds(targetPosition)) { //MUST TUNE PID
-                 double ffv = (targetPosition - getElevatorPosition()) / 200;
+                // double ffv = (targetPosition - getElevatorPosition()) / 200;
                 double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
-               double feedforward = elevatorFF.calculate(ffv); //apply feedforward
-               elevatorPower = pidOutput + 0;
+               //double feedforward = elevatorFF.calculate(ffv); //apply feedforward
+               elevatorPower = pidOutput;
                 //elevatorPID.calculate(getElevatorPosition(), targetPosition); //pre feedforward
                 if(coralHandler.isIntakeBroken() && getElevatorPosition() < 1.5/*Adjust as needed */){
                     stop();
