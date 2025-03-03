@@ -87,7 +87,7 @@ public class RobotContainer {
         configureAutoChooser();
         setupShuffleboard();
          
-        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
+        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
         NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
     }
 
