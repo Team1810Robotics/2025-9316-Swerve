@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.Constants;
@@ -38,23 +41,26 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     
 
 
-
-    public CoralHandlerSubsystem(LEDSubsystem ledSubsystem) {
+    public CoralHandlerSubsystem(LEDSubsystem 
+    ledSubsystem) {
         this.ledSubsystem = ledSubsystem;
-        coralHandlerMotor.set(0); // Ensure motor starts off
+        SparkMaxConfig config_ = new SparkMaxConfig();
+        config_.idleMode(SparkBaseConfig.IdleMode.kBrake);
+        coralHandlerMotor.set(0);
+        coralHandlerMotor.configure(config_, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters); // Ensure motor starts off
     }
 
     // //Start Intake//
     public void startIntake() {
-        coralHandlerMotor.set(0.5);
-        setLEDColor(Constants.LEDConstants.ORANGE, "orange");
+        coralHandlerMotor.set(0.35);
+        setLEDColor(Constants.LEDConstants.YELLOW, "yellow");
         System.out.println("Coral Handler Intake Active");
     }
 
     //Start Outtake//
     public void startOuttake() {
         coralHandlerMotor.set(0.5);
-        setLEDColor(Constants.LEDConstants.ORANGE, "yellow");
+        setLEDColor(Constants.LEDConstants.RED, "red");
         System.out.println("Coral Handler Outtake Active");
     }
 
@@ -73,8 +79,9 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
         if (hopperBroken) {
             isCoralInProcess = true;
+            setLEDColor(Constants.LEDConstants.BLUE,"Blue"); // Idle
             System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
-            coralHandlerMotor.set(.25);
+            coralHandlerMotor.set(.35);
         }
 
         if (!intakeBroken && !hopperBroken && isCoralInProcess) {

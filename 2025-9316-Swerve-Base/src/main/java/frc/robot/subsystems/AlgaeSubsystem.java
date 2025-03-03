@@ -35,9 +35,13 @@ public class AlgaeSubsystem extends SubsystemBase {
     public void setSpeed(double speed){
         motor.set(speed);
     }
+
     public void reset(){
-       
     }
+
+    public boolean getIsValidRange(){
+        return distanceSensor.isRangeValid();
+    }    
 
      public double getDistanceSensor() {
          if (true){distanceSensor.isRangeValid();
