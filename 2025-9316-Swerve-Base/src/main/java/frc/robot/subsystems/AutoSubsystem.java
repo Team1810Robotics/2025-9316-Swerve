@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AlgaeCommand;
 import frc.robot.commands.ElevatorCommand;
 
@@ -90,30 +91,26 @@ public class AutoSubsystem extends SubsystemBase {
             }
         };
     }
-
-    public static Command AutoExchange(
-    CoralHandlerSubsystem coralHandlerSubsystem, 
-    ElevatorSubsystem elevatorSubsystem, 
-    AlgaeSubsystem algaeSubsystem
-) {
+    //Drop the Coral, get Algae at L2 
+    public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
     return new SequentialCommandGroup(
         // Step 1: Output Coral
         new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem),
-        new WaitCommand(0.5);
+        new WaitCommand(0.5),
         // Step 2: Raise the Elevator to L2
         new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1),
-        new WaitCommand(0.5);
+        new WaitCommand(0.5),
         // Step 3: Intake Algae
         new AlgaeCommand(algaeSubsystem, false, true),
-        new WaitCommand(1.0);
+        new WaitCommand(1.0),
         // Step 4: Lower Elevator to ground
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION),
-        // Step 5: Move to a new spot (PathPlanner path) - Unclear if this will work as is
-        AutoBuilder.buildAuto("ReefProcessor"),
-        new WaitCommand(1.0)
-        // Step 6: Outtake Algae
-        new WaitCommand(1.0)
-        new AlgaeCommand(algaeSubsystem, true, false);
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)      
     );
-}
+    }
+    //Eject Algae
+    public static Command ReefProcessor(AlgaeSubsystem algaeSubsystem){
+        return new AlgaeCommand(algaeSubsystem, true, false);
+    }
+
+
 }
