@@ -35,6 +35,7 @@ import frc.robot.subsystems.CoralHandlerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 
+
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -188,6 +189,11 @@ public class RobotContainer {
 
 
     private void configureAutoChooser() {
+        NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{System.out.println("Scored Coral");}));
+        NamedCommands.registerCommand("getAlgae", getAutonomousCommand());
+        NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
+
+
         // Set default option
         autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
 
