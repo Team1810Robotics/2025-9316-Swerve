@@ -13,9 +13,10 @@ public class AutoSubsystem extends SubsystemBase {
     private static final Logger logger = Logger.getLogger(AutoSubsystem.class.getName());
 
     public enum AutoMode {
+        goOffline,
+        IdealAuto,
         ReefProcessor, // Auto
-        StartReef,
-    }
+        }
 
     /**
      * Retrieves the autonomous command based on the specified AutoMode.
@@ -23,16 +24,16 @@ public class AutoSubsystem extends SubsystemBase {
      * @param autoMode The AutoMode to retrieve the command for.
      * @return An Optional containing the Command if successful, or empty if failed.
      */
-    public static Optional<Command> getAutoCommand(AutoMode autoMode) {
+    public static Command getAutoCommand(AutoMode autoMode) {
         String autoName = autoMode.name();
         logger.info("Auto Selected: " + autoName);
         
         Command autoCommand = AutoBuilder.buildAuto(autoName);
         if (autoCommand == null) {
             logger.severe("Failed to build auto command for: " + autoName);
-            return Optional.empty();
+            return new InstantCommand(() -> logger.warning("No valid auto command found for " + autoName));
         }
-        return Optional.of(autoCommand);
+        return autoCommand;
     }
 
     /**

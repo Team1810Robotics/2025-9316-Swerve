@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.io.IOException;
 import java.util.HashMap;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix.platform.can.AutocacheState;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -189,20 +190,23 @@ public class RobotContainer {
 
 
     private void configureAutoChooser() {
-        NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{System.out.println("Scored Coral");}));
+       // NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{AutoCoralReleaseCommand};
         NamedCommands.registerCommand("getAlgae", getAutonomousCommand());
         NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
 
 
         // Set default option
-        autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
+        autoChooser.setDefaultOption("No Auto", new InstantCommand());
 
         // Add PathPlanner paths
-        autoChooser.addOption("score1auto", AutoSubsystem.getAutoCommand("score1auto"));
-        autoChooser.addOption("moveOffLine", AutoSubsystem.getAutoCommand("MoveOffLine"));
+        autoChooser.addOption("Go Offline", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.goOffline));
+        autoChooser.addOption("Ideal Auto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
+        autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
+    
+        
           // Display on SmartDashboard
       Shuffleboard.getTab("Autonomous").add(autoChooser);
-    }
+        }
     public Command getAutonomousCommand() {
         if (autoChooser.getSelected() != null){
             return autoChooser.getSelected();
