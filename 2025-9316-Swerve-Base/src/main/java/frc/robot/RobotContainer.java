@@ -81,11 +81,14 @@ public class RobotContainer {
     
     
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
-    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final SendableChooser<Command> autoChooser;
    public RobotContainer(){
         algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
    
         configureBindings();
+        autoChooser = AutoBuilder.buildAutoChooser("");
+        SmartDashboard.putData("Auto Chooser", autoChooser);
         configureAutoChooser();
         setupShuffleboard();
          
@@ -196,6 +199,8 @@ public class RobotContainer {
 
 
     private void configureAutoChooser() {
+        
+        
        // NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{AutoCoralReleaseCommand};
         NamedCommands.registerCommand("getAlgae", getAutonomousCommand());
         NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
@@ -220,4 +225,6 @@ public class RobotContainer {
             return Commands.print("No autonomous command configured, if a path was chosen, this is an error.");
         }
     }
+
+    
 }
