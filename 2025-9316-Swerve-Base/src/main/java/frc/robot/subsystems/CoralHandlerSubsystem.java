@@ -52,7 +52,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
     // //Start Intake//
     public void startIntake() {
-        coralHandlerMotor.set(0.35);
+        coralHandlerMotor.set(1);
         setLEDColor(Constants.LEDConstants.YELLOW, "yellow");
         System.out.println("Coral Handler Intake Active");
     }

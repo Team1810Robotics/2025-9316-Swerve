@@ -20,6 +20,7 @@ public class AutoSubsystem extends SubsystemBase {
         goOffline,
         IdealAuto,
         ReefProcessor, // Auto
+        OL_CL2,
         }
 
     /**
