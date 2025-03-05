@@ -94,7 +94,7 @@ public class RobotContainer {
         setupShuffleboard();
          
         NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
-        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
+        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor(algaeSubsystem));
     }
 
     private void setupShuffleboard() {
@@ -144,7 +144,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
                     .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/(joystick.rightTrigger().getAsBoolean() ? 5.5 : 10)) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/(joystick.rightTrigger().getAsBoolean() ? 1 : 2)) // Drive counterclockwise with negative X (left)
             )
         );
         
@@ -200,10 +200,9 @@ public class RobotContainer {
 
 
     private void configureAutoChooser() {
-        
-        
+           
        // NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{AutoCoralReleaseCommand};
-        NamedCommands.registerCommand("getAlgae", getAutonomousCommand());
+        //NamedCommands.registerCommand("getAlgae", new AutoSubsystem.ReefProcessor(algaeSubsystem));
         NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
         NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
         NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));
@@ -215,7 +214,7 @@ public class RobotContainer {
 
         // Add PathPlanner paths
         autoChooser.addOption("Go Offline", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.goOffline));
-        autoChooser.addOption("Ideal Auto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
+        autoChooser.addOption("IdealAuto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
         autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
         //autoChooser.addOption("OL - CL2", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.OL_CL2));
     

@@ -41,31 +41,6 @@ public class AutoSubsystem extends SubsystemBase {
         return autoCommand;
     }
 
-    /**
-     * Executes the Reef Processor autonomous mode.
-     * 
-     * @return The command for the Reef Processor mode.
-     */
-    public static Command ReefProcessor() {
-        logger.info("Executing Reef Processor Auto Mode");
-        // Implement the functionality for Reef Processor here
-        return new Command() {
-            @Override
-            public void initialize() {
-                // Initialization logic for Reef Processor
-            }
-
-            @Override
-            public void execute() {
-                // Execution logic for Reef Processor
-            }
-
-            @Override
-            public boolean isFinished() {
-                return false; // Change this based on your logic
-            }
-        };
-    }
 
     /**
      * Executes the Start Reef autonomous mode.
@@ -110,6 +85,7 @@ public class AutoSubsystem extends SubsystemBase {
     }
     //Eject Algae
     public static Command ReefProcessor(AlgaeSubsystem algaeSubsystem){
+        logger.info("Executing Reef Processor Auto Mode");
         return new AlgaeCommand(algaeSubsystem, true, false);
     }
 
