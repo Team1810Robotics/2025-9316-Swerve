@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.io.IOException;
 import java.util.HashMap;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix.platform.can.AutocacheState;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -35,17 +36,13 @@ import frc.robot.subsystems.CoralHandlerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 
+
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.RestClient;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.AutoSubsystem;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.action.index.IndexRequest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -55,6 +52,7 @@ import java.util.Map;
 
 public class RobotContainer {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main Tab");
+    private final ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
 
     public boolean driveState = true;
 
@@ -69,8 +67,9 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
-    private final CommandXboxController xbox = new CommandXboxController(1);
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController joystick = new CommandXboxController(0);  //Driver Controller
+    private final CommandXboxController xbox = new CommandXboxController(1);      //Manipulator Controller
+ 
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -85,17 +84,18 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
    public RobotContainer(){
         algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
-        setElastic();
+   
         configureBindings();
         configureAutoChooser();
         setupShuffleboard();
          
-        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
+        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
         NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
     }
 
     private void setupShuffleboard() {
-        mainTab.addBoolean("Hopper Beam Break1", () -> coralHandler.isHopperBroken())
+        //Beam Break Data
+        mainTab.addBoolean("Hopper Beam Break", () -> coralHandler.isHopperBroken())
             .withPosition(0,0).withSize(2,1);
 
         mainTab.addBoolean("Intake Beam Break", () -> coralHandler.isIntakeBroken())
@@ -104,9 +104,7 @@ public class RobotContainer {
         mainTab.addBoolean("Outtake Beam Break", () -> coralHandler.isOuttakeBroken())
             .withPosition(0,2).withSize(2,1);
 
-        // mainTab.addBoolean("Elevator Locked", () -> coralHandler.isElevatorLocked())
-        //     .withPosition(0,3).withSize(2,1);
-
+        // Elevator Data
         mainTab.addNumber("Elevator Position", () -> elevatorSubsystem.getElevatorPosition())
             .withPosition(2,0).withSize(2,1);
 
@@ -115,36 +113,24 @@ public class RobotContainer {
 
         mainTab.addNumber("Elevator Power", () -> elevatorSubsystem.getElevatorPower())
             .withPosition(4,2).withSize(2,1);
-
+        //Coral Process
         mainTab.addBoolean("Is Coral In Process", () -> coralHandler.isCoralInProcess())
             .withPosition(2,1).withSize(2,1);
-
+        //LED Color
         mainTab.addString("LED", () -> ledSubsystem.getLEDColor())
             .withPosition(2,2).withSize(2,1);
 
+        //Algae - Distance
         mainTab.addBoolean("isValidDistance", () -> algaeSubsystem.getIsValidRange())
             .withPosition(6,0).withSize(2,1);
 
         mainTab.addDouble("distance Sensor", () -> algaeSubsystem.getDistanceSensor())
             .withPosition(6,1).withSize(2,1);
-
-
-        // mainTab.addBoolean("Is Reversing", () -> coralHandler.isReversing())
-        //     .withPosition(3,2).withSize(2,1);
-
-        
+            
 
     }
 
-    public void setElastic(){
-
-/*       teleopTab.addDouble("Match Time", () -> DriverStation.getMatchTime());
-       teleopTab.addDouble("Algae Distance", () -> algaeSubsystem.getDistanceSensor());
-       teleopTab.addDouble("Elevator Encoder", () -> elevatorSubsystem.getElevatorPosition());
-       teleopTab.addDouble("Elevator Current", () -> elevatorSubsystem.getEntry());
-       teleopTab.addDouble("Elevator Position", () -> elevatorSubsystem.getEntry());
-       teleopTab.addDoulbe("Is Hopper Broken", () -> CoralHandlerSubsystem.isHopperBroken());*/
-    }  
+ 
     private void configureBindings() {
         
         // Note that X is defined as forward according to WPILib convention,
@@ -210,20 +196,23 @@ public class RobotContainer {
 
 
     private void configureAutoChooser() {
+       // NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{AutoCoralReleaseCommand};
+        NamedCommands.registerCommand("getAlgae", getAutonomousCommand());
+        NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
+
+
         // Set default option
-        autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
+        autoChooser.setDefaultOption("No Auto", new InstantCommand());
 
         // Add PathPlanner paths
-    //  autoChooser.addOption("score1", AutoSubsystem.getAutoCommand("score1"));
-      //  autoChooser.addOption("2 Right Auto", AutoSubsystem.getAutoCommand("2RightAuto"));
-      //  autoChooser.addOption("Left Auto", AutoSubsystem.getAutoCommand("LeftAuto"));
-      //  autoChooser.addOption("Right Auto", AutoSubsystem.getAutoCommand("RightAuto"));
-      //  autoChooser.addOption("Middle Auto", AutoSubsystem.getAutoCommand("MiddleAuto"));
-
-        // Display on SmartDashboard
-       SmartDashboard.putData("Auto choices", autoChooser);
-		Shuffleboard.getTab("Autonomous").add(autoChooser);
-    }
+        autoChooser.addOption("Go Offline", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.goOffline));
+        autoChooser.addOption("Ideal Auto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
+        autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
+    
+        
+          // Display on SmartDashboard
+      Shuffleboard.getTab("Autonomous").add(autoChooser);
+        }
     public Command getAutonomousCommand() {
         if (autoChooser.getSelected() != null){
             return autoChooser.getSelected();
