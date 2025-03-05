@@ -56,6 +56,8 @@ import java.util.Map;
 public class RobotContainer {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main Tab");
 
+    public boolean driveState = true;
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -144,16 +146,18 @@ public class RobotContainer {
        teleopTab.addDoulbe("Is Hopper Broken", () -> CoralHandlerSubsystem.isHopperBroken());*/
     }  
     private void configureBindings() {
+        
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/6) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/6) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/10) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/(joystick.rightTrigger().getAsBoolean() ? 5.5 : 10)) // Drive counterclockwise with negative X (left)
             )
         );
+        
 
 
            xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
@@ -186,6 +190,8 @@ public class RobotContainer {
         xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1));        // L3
         xbox.leftBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2));        // L3
 
+        xbox.y().whileTrue(new InstantCommand(() -> coralHandler.nudge()))
+        .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
         // Elevator Emergency Stop
         xbox.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));
 

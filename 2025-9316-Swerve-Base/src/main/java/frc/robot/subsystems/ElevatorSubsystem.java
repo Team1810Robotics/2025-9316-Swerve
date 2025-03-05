@@ -104,7 +104,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             if (isWithinBounds(targetPosition)) { 
                 double pidOutput = elevatorPID.calculate(getElevatorPosition(), targetPosition);
                elevatorPower = pidOutput;
-                if(coralHandler.isIntakeBroken() && getElevatorPosition() < 1.5){
+                if(coralHandler.isIntakeBroken() && getElevatorPosition() < 2){
                     stop();
                 }else{
                     if(elevatorPower < 0){
