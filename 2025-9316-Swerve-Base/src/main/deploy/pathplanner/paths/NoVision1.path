@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.099611643566144,
-        "y": 4.055854554993686
+        "x": 7.654,
+        "y": 4.03475
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.3027500000000005,
-        "y": 4.13225
+        "x": 6.815500000000001,
+        "y": 4.0445
       },
       "isLocked": false,
-      "linkedName": "Ideal9316Part2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.976749999999999,
-        "y": 0.6125
+        "x": 6.123,
+        "y": 4.035
       },
       "prevControl": {
-        "x": 6.754078767123287,
-        "y": 2.556523116438356
+        "x": 6.7860000000000005,
+        "y": 4.035
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.29278968140395
+    "rotation": -178.95837332399
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.90551711021516
+    "rotation": -177.3974377975002
   },
   "useDefaultConstraints": true
 }

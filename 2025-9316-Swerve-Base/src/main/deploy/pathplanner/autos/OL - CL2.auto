@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "gotocenter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoExchange"
+            "pathName": "StartReef"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "gotoproccessor"
+            "waitTime": 2.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ReefProcessor"
+            "name": "L2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreCoral"
           }
         }
       ]

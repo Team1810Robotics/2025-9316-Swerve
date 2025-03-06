@@ -52,9 +52,20 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
     // //Start Intake//
     public void startIntake() {
-        coralHandlerMotor.set(0.5);
+        coralHandlerMotor.set(1);
         setLEDColor(Constants.LEDConstants.YELLOW, "yellow");
         System.out.println("Coral Handler Intake Active");
+    }
+
+    public void nudge(){
+        coralHandlerMotor.set(0.10);
+        setLEDColor(Constants.LEDConstants.RED, "red");
+
+    }
+    public void back(){
+        coralHandlerMotor.set(-0.10);
+        setLEDColor(Constants.LEDConstants.RED, "red");
+
     }
 
     //Start Outtake//
@@ -79,6 +90,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
         if (hopperBroken) {
             isCoralInProcess = true;
+            setLEDColor(Constants.LEDConstants.BLUE,"Blue"); // Idle
             System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
             coralHandlerMotor.set(.35);
         }
