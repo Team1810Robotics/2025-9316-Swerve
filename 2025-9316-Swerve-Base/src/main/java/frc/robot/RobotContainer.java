@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.io.IOException;
 import java.util.HashMap;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix.platform.can.AutocacheState;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,12 +55,14 @@ public class RobotContainer {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main Tab");
     private final ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
 
+    public boolean driveState = true;
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.075).withRotationalDeadband(MaxAngularRate * 0.075) // Add a 7.5% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -78,16 +82,19 @@ public class RobotContainer {
     
     
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
-    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final SendableChooser<Command> autoChooser;
    public RobotContainer(){
         algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
    
         configureBindings();
+        autoChooser = AutoBuilder.buildAutoChooser("");
+        SmartDashboard.putData("Auto Chooser", autoChooser);
         configureAutoChooser();
         setupShuffleboard();
          
-        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange());
-        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor());
+        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
+        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor(algaeSubsystem));
     }
 
     private void setupShuffleboard() {
@@ -129,16 +136,18 @@ public class RobotContainer {
 
  
     private void configureBindings() {
+        
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/6) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/6) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/10) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/(joystick.rightTrigger().getAsBoolean() ? 1 : 2)) // Drive counterclockwise with negative X (left)
             )
         );
+        
 
 
            xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
@@ -171,12 +180,17 @@ public class RobotContainer {
         xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1));        // L3
         xbox.leftBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2));        // L3
 
+        xbox.y().whileTrue(new InstantCommand(() -> coralHandler.nudge()))
+        .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
         // Elevator Emergency Stop
         xbox.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));
 
         //Eject Coral
         xbox.rightTrigger().whileTrue(new InstantCommand(() -> coralHandler.startOuttake()))
                     .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
+
+        xbox.start().whileTrue(new InstantCommand(() -> coralHandler.back()))
+          .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
         // Manual Adjustments for Elevator
         //DO NOT USE
@@ -189,20 +203,28 @@ public class RobotContainer {
 
 
     private void configureAutoChooser() {
-        NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{System.out.println("Scored Coral");}));
-        NamedCommands.registerCommand("getAlgae", getAutonomousCommand());
+           
+       // NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{AutoCoralReleaseCommand};
+        //NamedCommands.registerCommand("getAlgae", new AutoSubsystem.ReefProcessor(algaeSubsystem));
         NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
-
+        NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
+        NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));
+        NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> coralHandler.startOuttake()));
+        //NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem , algaeSubsystem)));
 
         // Set default option
-        autoChooser.setDefaultOption("No Auto", new InstantCommand(() -> AutoSubsystem.getAutoCommand("NoPath")));
+        autoChooser.setDefaultOption("No Auto", new InstantCommand());
 
         // Add PathPlanner paths
-        autoChooser.addOption("score1auto", AutoSubsystem.getAutoCommand("score1auto"));
-        autoChooser.addOption("moveOffLine", AutoSubsystem.getAutoCommand("MoveOffLine"));
+        autoChooser.addOption("Go Offline", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.goOffline));
+        autoChooser.addOption("IdealAuto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
+        autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
+        //autoChooser.addOption("OL - CL2", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.OL_CL2));
+    
+        
           // Display on SmartDashboard
       Shuffleboard.getTab("Autonomous").add(autoChooser);
-    }
+        }
     public Command getAutonomousCommand() {
         if (autoChooser.getSelected() != null){
             return autoChooser.getSelected();
@@ -210,4 +232,6 @@ public class RobotContainer {
             return Commands.print("No autonomous command configured, if a path was chosen, this is an error.");
         }
     }
+
+    
 }
