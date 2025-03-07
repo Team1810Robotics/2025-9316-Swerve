@@ -85,6 +85,12 @@ public class RobotContainer {
     //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private final SendableChooser<Command> autoChooser;
    public RobotContainer(){
+    NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
+    NamedCommands.registerCommand("EjectAlgae", AutoSubsystem.EjectAlgae(algaeSubsystem));
+    NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
+    NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));
+    NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> coralHandler.startOuttake()));
+    
         algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
    
         configureBindings();
@@ -93,8 +99,7 @@ public class RobotContainer {
         configureAutoChooser();
         setupShuffleboard();
          
-        NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
-        NamedCommands.registerCommand("ReefProcessor", AutoSubsystem.ReefProcessor(algaeSubsystem));
+       
     }
 
     private void setupShuffleboard() {
@@ -206,11 +211,7 @@ public class RobotContainer {
            
        // NamedCommands.registerCommand("dropCoral", Commands.runOnce(()->{AutoCoralReleaseCommand};
         //NamedCommands.registerCommand("getAlgae", new AutoSubsystem.ReefProcessor(algaeSubsystem));
-        NamedCommands.registerCommand("dropAlgae", getAutonomousCommand());
-        NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
-        NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));
-        NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> coralHandler.startOuttake()));
-        //NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem , algaeSubsystem)));
+   //NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem , algaeSubsystem)));
 
         // Set default option
         autoChooser.setDefaultOption("No Auto", new InstantCommand());
@@ -218,7 +219,7 @@ public class RobotContainer {
         // Add PathPlanner paths
         autoChooser.addOption("Go Offline", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.goOffline));
         autoChooser.addOption("IdealAuto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
-        autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
+       // autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
         //autoChooser.addOption("OL - CL2", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.OL_CL2));
     
         

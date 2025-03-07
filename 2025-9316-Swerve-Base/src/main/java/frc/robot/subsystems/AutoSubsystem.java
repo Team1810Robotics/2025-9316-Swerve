@@ -84,8 +84,8 @@ public class AutoSubsystem extends SubsystemBase {
     );
     }
     //Eject Algae
-    public static Command ReefProcessor(AlgaeSubsystem algaeSubsystem){
-        logger.info("Executing Reef Processor Auto Mode");
+    public static Command EjectAlgae(AlgaeSubsystem algaeSubsystem){
+        logger.info("Executing Eject Algae Auto Mode");
         return new AlgaeCommand(algaeSubsystem, true, false);
     }
 
