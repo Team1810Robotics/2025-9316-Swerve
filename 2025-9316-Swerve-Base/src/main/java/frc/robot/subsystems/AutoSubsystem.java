@@ -70,17 +70,24 @@ public class AutoSubsystem extends SubsystemBase {
     //Drop the Coral, get Algae at L2 
     public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
     return new SequentialCommandGroup(
+
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION),
+        //new WaitCommand(2.5),
+
         // Step 1: Output Coral
-        new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem),
-        new WaitCommand(0.5),
+        new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem)
+        //new WaitCommand(1.5)
+        //new InstantCommand(() -> coralHandlerSubsystem.stopCoralHandler(), coralHandlerSubsystem),
+        //new WaitCommand(1.5),
+        
         // Step 2: Raise the Elevator to L2
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1),
-        new WaitCommand(0.5),
+        //new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1),
+        //new WaitCommand(0.5),
         // Step 3: Intake Algae
-        new AlgaeCommand(algaeSubsystem, false, true),
-        new WaitCommand(1.0),
+        //new AlgaeCommand(algaeSubsystem, false, true),
+        //new WaitCommand(1.0),
         // Step 4: Lower Elevator to ground
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)      
+        //new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)      
     );
     }
     //Eject Algae

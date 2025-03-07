@@ -79,14 +79,16 @@ public class RobotContainer {
     public final LEDSubsystem ledSubsystem = new LEDSubsystem();
     private final CoralHandlerSubsystem coralHandler = new CoralHandlerSubsystem(ledSubsystem);
     public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
+
+    public final AutoSubsystem autoSubsystem = new AutoSubsystem();
     
     
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
     //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private final SendableChooser<Command> autoChooser;
    public RobotContainer(){
-    NamedCommands.registerCommand("AutoExchange", AutoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
-    NamedCommands.registerCommand("EjectAlgae", AutoSubsystem.EjectAlgae(algaeSubsystem));
+    NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
+    NamedCommands.registerCommand("EjectAlgae", autoSubsystem.EjectAlgae(algaeSubsystem));
     NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
     NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));
     NamedCommands.registerCommand("ScoreCoral", new RunCommand(() -> coralHandler.startOuttake()));

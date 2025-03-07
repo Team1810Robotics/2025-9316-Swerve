@@ -70,7 +70,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
     //Start Outtake//
     public void startOuttake() {
-        coralHandlerMotor.set(0.5);
+        coralHandlerMotor.set(0.37);
         setLEDColor(Constants.LEDConstants.RED, "red");
         System.out.println("Coral Handler Outtake Active");
     }
