@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -87,10 +88,10 @@ public class RobotContainer {
     //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private final SendableChooser<Command> autoChooser;
     public RobotContainer(){
-        NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
+        NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
         //individual commands
-        NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler,));
+        NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler));
         NamedCommands.registerCommand("L2Pos", autoSubsystem.L2Pos(elevatorSubsystem));
         NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem));
         NamedCommands.registerCommand("IntakePos", autoSubsystem.IntakePos(elevatorSubsystem));

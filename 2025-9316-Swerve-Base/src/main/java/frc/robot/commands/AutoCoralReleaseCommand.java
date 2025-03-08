@@ -13,4 +13,9 @@ public class AutoCoralReleaseCommand extends Command{
     public void execute() {
         coralHandlerSubsystem.startOuttake();
     }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
