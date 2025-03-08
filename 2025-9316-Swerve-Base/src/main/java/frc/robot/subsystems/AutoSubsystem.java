@@ -83,27 +83,44 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
     public static Command L2Pos(ElevatorSubsystem elevatorSubsystem){
-                new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION)
+        logger.info("Executing Coral L2 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION)
     }
 
     public static Command Scoral(CoralHandlerSubsystem coralHandlerSubsystem){
-        return new SequentialCommandGroup(
-            new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem)
-        );
+        logger.info("Executing Coral score Auto Mode");
+        new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem)
     }
 
     public static Command IntakePos(ElevatorSubsystem elevatorSubsystem){
-                new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)
+        logger.info("Executing intake height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)
     }
 
     public static Command L1Pos(ElevatorSubsystem elevatorSubsystem){
-                new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION)
+        logger.info("Executing Coral L1 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION)
+    }
+
+    public static Command Algae1Pos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Algae L1 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1)
+    }
+
+    public static Command Algae2Pos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Algae L2 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2)
     }
     
     //Eject Algae
     public static Command EjectAlgae(AlgaeSubsystem algaeSubsystem){
         logger.info("Executing Eject Algae Auto Mode");
         return new AlgaeCommand(algaeSubsystem, true, false);
+    }
+
+    public static Command GrabAlgae(AlgaeSubsystem algaeSubsystem){
+        logger.info("Executing grab Algae Auto Mode");
+        return new AlgaeCommand(algaeSubsystem, false, true);
     }
 
 
