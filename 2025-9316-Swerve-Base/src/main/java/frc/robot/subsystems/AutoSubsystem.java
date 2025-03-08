@@ -83,7 +83,7 @@ public class AutoSubsystem extends SubsystemBase {
     }
     public static Command Scoral(CoralHandlerSubsystem coralHandlerSubsystem){
         return new SequentialCommandGroup(
-            new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem).withTimeout(2),
+            new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem).withTimeout(2)
         );
     }
 
