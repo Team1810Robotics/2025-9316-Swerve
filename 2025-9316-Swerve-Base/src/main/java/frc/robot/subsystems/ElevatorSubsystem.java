@@ -34,8 +34,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static final double MAX_HEIGHT = 40;
     private static final double MIN_HEIGHT = 0;
     public static final double INTAKE_POSITION = .5;
-    public static final double L1_POSITION = 10;        //10    
-    public static final double L2_POSITION = 26;        //18
+    public static final double L1_POSITION = 11;        //10    
+    public static final double L2_POSITION = 27;        //18
     public static final double Algae1 = 18.5;        //36
     public static final double Algae2 = 35.5;        //36
     public static final double climb = 40;        //36
