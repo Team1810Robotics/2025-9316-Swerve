@@ -76,8 +76,8 @@ public class AutoSubsystem extends SubsystemBase {
 
         // Step 1: Output Coral
         //new WaitCommand(1.5)
-        //new InstantCommand(() -> coralHandlerSubsystem.stopCoralHandler(), coralHandlerSubsystem),
-        //new WaitCommand(1.5),
+        new InstantCommand(() -> coralHandlerSubsystem.stopCoralHandler(), coralHandlerSubsystem),
+        new WaitCommand(1.5),
         new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)      
     );
     }

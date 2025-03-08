@@ -87,7 +87,8 @@ public class RobotContainer {
     //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private final SendableChooser<Command> autoChooser;
    public RobotContainer(){
-    NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
+    //Added Interrupt Behavior modifier
+    NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     NamedCommands.registerCommand("EjectAlgae", autoSubsystem.EjectAlgae(algaeSubsystem));
     NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
     NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));
