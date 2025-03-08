@@ -43,9 +43,33 @@
         {
           "type": "named",
           "data": {
+            "name": "Algae1Pos"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GrabAlgae"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "IntakePos"
           }
-        }
+        },
       ]
     }
   },

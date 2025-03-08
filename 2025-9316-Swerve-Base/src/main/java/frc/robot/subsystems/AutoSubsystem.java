@@ -70,23 +70,57 @@ public class AutoSubsystem extends SubsystemBase {
     //Drop the Coral, get Algae at L2 
     public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
     return new SequentialCommandGroup(
+
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION).withTimeout(2),
+        //new WaitCommand(2.5),
+
         // Step 1: Output Coral
-        new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem),
-        new WaitCommand(0.5),
-        // Step 2: Raise the Elevator to L2
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1),
-        new WaitCommand(0.5),
-        // Step 3: Intake Algae
-        new AlgaeCommand(algaeSubsystem, false, true),
-        new WaitCommand(1.0),
-        // Step 4: Lower Elevator to ground
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)      
+        //new WaitCommand(1.5)
+        //new InstantCommand(() -> coralHandlerSubsystem.stopCoralHandler(), coralHandlerSubsystem),
+        //new WaitCommand(1.5),
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)      
     );
     }
+
+    public static Command L2Pos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Coral L2 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION)
+    }
+
+    public static Command Scoral(CoralHandlerSubsystem coralHandlerSubsystem){
+        logger.info("Executing Coral score Auto Mode");
+        new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem)
+    }
+
+    public static Command IntakePos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing intake height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)
+    }
+
+    public static Command L1Pos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Coral L1 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION)
+    }
+
+    public static Command Algae1Pos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Algae L1 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1)
+    }
+
+    public static Command Algae2Pos(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Algae L2 height Auto Mode");
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2)
+    }
+    
     //Eject Algae
-    public static Command ReefProcessor(AlgaeSubsystem algaeSubsystem){
-        logger.info("Executing Reef Processor Auto Mode");
+    public static Command EjectAlgae(AlgaeSubsystem algaeSubsystem){
+        logger.info("Executing Eject Algae Auto Mode");
         return new AlgaeCommand(algaeSubsystem, true, false);
+    }
+
+    public static Command GrabAlgae(AlgaeSubsystem algaeSubsystem){
+        logger.info("Executing grab Algae Auto Mode");
+        return new AlgaeCommand(algaeSubsystem, false, true);
     }
 
 
