@@ -88,6 +88,12 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
    public RobotContainer(){
     NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem));
+    NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler,));
+    NamedCommands.registerCommand("L2Pos", autoSubsystem.L2Pos(elevatorSubsystem));
+    NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem));
+    NamedCommands.registerCommand("IntakePos", autoSubsystem.IntakePos(elevatorSubsystem));
+
+
     NamedCommands.registerCommand("EjectAlgae", autoSubsystem.EjectAlgae(algaeSubsystem));
     NamedCommands.registerCommand("L1", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));
     NamedCommands.registerCommand("L2", new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));

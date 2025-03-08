@@ -7,7 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartReef"
+            "pathName": "StartReef2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L2Pos"
           }
         },
         {
@@ -19,7 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L2"
+            "name": "Scoral"
           }
         },
         {
@@ -31,9 +43,9 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreCoral"
+            "name": "IntakePos"
           }
-        }
+        },
       ]
     }
   },

@@ -81,12 +81,24 @@ public class AutoSubsystem extends SubsystemBase {
         new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)      
     );
     }
+
+    public static Command L2Pos(ElevatorSubsystem elevatorSubsystem){
+                new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION)
+    }
+
     public static Command Scoral(CoralHandlerSubsystem coralHandlerSubsystem){
         return new SequentialCommandGroup(
-            new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem).withTimeout(2)
+            new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem)
         );
     }
 
+    public static Command IntakePos(ElevatorSubsystem elevatorSubsystem){
+                new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION)
+    }
+
+    public static Command L1Pos(ElevatorSubsystem elevatorSubsystem){
+                new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION)
+    }
     
     //Eject Algae
     public static Command EjectAlgae(AlgaeSubsystem algaeSubsystem){
