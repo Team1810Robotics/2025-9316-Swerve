@@ -75,21 +75,19 @@ public class AutoSubsystem extends SubsystemBase {
         //new WaitCommand(2.5),
 
         // Step 1: Output Coral
-        new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem).withTimeout(2),
         //new WaitCommand(1.5)
         //new InstantCommand(() -> coralHandlerSubsystem.stopCoralHandler(), coralHandlerSubsystem),
         //new WaitCommand(1.5),
-        
-        // Step 2: Raise the Elevator to L2
-        //new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1),
-        //new WaitCommand(0.5),
-        // Step 3: Intake Algae
-        //new AlgaeCommand(algaeSubsystem, false, true),
-        //new WaitCommand(1.0),
-        // Step 4: Lower Elevator to ground
         new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)      
     );
     }
+    public static Command Scoral(CoralHandlerSubsystem coralHandlerSubsystem){
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> coralHandlerSubsystem.startOuttake(), coralHandlerSubsystem).withTimeout(2),
+        );
+    }
+
+    
     //Eject Algae
     public static Command EjectAlgae(AlgaeSubsystem algaeSubsystem){
         logger.info("Executing Eject Algae Auto Mode");
