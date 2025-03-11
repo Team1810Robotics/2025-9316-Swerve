@@ -34,6 +34,7 @@ public class Constants {
         }
     }
 
+
   public static final class CoralHandlerConstants {
 
         public static final int CORAL_HANDLER_MOTOR_ID = 11; // Coral Intake
@@ -59,27 +60,27 @@ public class Constants {
     
 
     public static final class VisionConstants {
-        public static final String TARGET_CAMERA = "Arducam_OV9281_USB_Camera";
+        public static final String TARGET_CAMERA = "Arducam_UC-852_USB_Camera";
         public static final double CAMERA_HEIGHT = 0.0; // Units? (e.g., meters)
         public static final double APRILTAG_RED_SHOOTER_HEIGHT = 0.0; // Units?
         public static final double CAMERA_PITCH = 0.0; // Units? (e.g., degrees)
 
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
-                AprilTagFields.k2025ReefscapeAndyMark.loadAprilTagLayoutField();
+        
         public static final Transform3d CAMERA_OFFSET = null; // Units?
-		//Vision Rotation PID variables
-        public static final double V_Kp = 0.05; // PID Kp
-        public static final double V_Ki = 0.0; // PID Ki
-        public static final double V_Kd = 0.0; // PID Kd
-		
-		//Vision Drive PID X vars
-		public static double VX_Kp = 0.5;
-        public static double VX_Ki = 0.0;
-        public static double VX_Kd = 0.0;
-		//Vision Drive PID Y vars
-		public static double VY_Kp = 1;
+		//Vision Rotation PID vars
+        public static double VR_Kp = 0.07;
+        public static double VR_Ki = 0.0;
+        public static double VR_Kd = 0.0;
+
+        //Vision Drive PID vars
+        public static double VY_Kp = 0.03;
         public static double VY_Ki = 0.0;
         public static double VY_Kd = 0.0;
+
+        //Vision Drive PID var
+        public static double VX_Kp = 0.125;
+        public static double VX_Ki = 0.0;
+        public static double VX_Kd = 0.0;
     }
 
     public static final class LEDConstants {

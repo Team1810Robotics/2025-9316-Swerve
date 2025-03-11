@@ -37,6 +37,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralHandlerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 
 import org.elasticsearch.action.index.IndexRequest;
@@ -50,7 +51,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("unused") // For now :) 
+@SuppressWarnings("unused") // For now :)
 
 public class RobotContainer {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main Tab");
@@ -65,6 +66,10 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.075).withRotationalDeadband(MaxAngularRate * 0.075) // Add a 7.5% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+    private final SwerveRequest.RobotCentric visDrive = new SwerveRequest.RobotCentric()
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -82,6 +87,7 @@ public class RobotContainer {
     public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
 
     public final AutoSubsystem autoSubsystem = new AutoSubsystem();
+    public final VisionSubsystem visionSubsystem = new VisionSubsystem();
     
     
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
@@ -155,7 +161,7 @@ public class RobotContainer {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
+            // Drivetrain will execute this command periodically            
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
                     .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
@@ -163,6 +169,48 @@ public class RobotContainer {
             )
         );
         
+
+
+// In RobotContainer.java, replace the vision alignment binding with:
+
+joystick.x().whileTrue(
+    drivetrain.applyRequest(() -> visDrive
+        // Forward/backward movement based on distance from target
+        .withVelocityX(-visionSubsystem.calculateXPower(
+            -joystick.getLeftY() * MaxSpeed / 6, // Default to manual control
+            0, // Target distance of 0.0 meters from AprilTag
+            true) * MaxSpeed) // Scale down for smoother approach
+            
+        // Left/right movement to center with the target
+        .withVelocityY(visionSubsystem.calculateYPower(
+            -joystick.getLeftX() * MaxSpeed / 6, // Default to manual control
+            0.0762, // Target centered (0 offset)
+            true) * MaxSpeed) // Scale down for smoother movement
+            
+        // Keep manual rotation control
+        .withRotationalRate(-joystick.getRightX() * MaxAngularRate / 2)
+    )
+);
+
+joystick.b().whileTrue(
+    drivetrain.applyRequest(() -> visDrive
+        // Forward/backward movement based on distance from target
+        .withVelocityX(-visionSubsystem.calculateXPower(
+            -joystick.getLeftY() * MaxSpeed / 6, // Default to manual control
+            -0.0762, // Target distance of 0.0 meters from AprilTag
+            true) * MaxSpeed) // Scale down for smoother approach
+            
+        // Left/right movement to center with the target
+        .withVelocityY(visionSubsystem.calculateYPower(
+            -joystick.getLeftX() * MaxSpeed / 6, // Default to manual control
+            0.0, // Target centered (0 offset)
+            true) * MaxSpeed) // Scale down for smoother movement
+            
+        // Keep manual rotation control
+        .withRotationalRate(-joystick.getRightX() * MaxAngularRate / 2)
+    )
+);
+
 
 
            xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
@@ -186,6 +234,7 @@ public class RobotContainer {
         // Algae Control - Driver controls intake, manipulator controls eject 
         joystick.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false,true));
         xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true,false));
+
         
 
         // Elevator Controls
