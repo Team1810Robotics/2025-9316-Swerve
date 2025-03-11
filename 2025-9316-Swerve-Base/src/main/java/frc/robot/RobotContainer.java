@@ -177,18 +177,20 @@ joystick.x().whileTrue(
     drivetrain.applyRequest(() -> visDrive
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
-            -joystick.getLeftY() * MaxSpeed / 6, // Default to manual control
-            0, // Target distance of 0.0 meters from AprilTag
-            true) * MaxSpeed) // Scale down for smoother approach
+            -joystick.getLeftY() * MaxSpeed / 6,
+            0.5,
+            true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
-            -joystick.getLeftX() * MaxSpeed / 6, // Default to manual control
-            0.0762, // Target centered (0 offset)
-            true) * MaxSpeed) // Scale down for smoother movement
+            -joystick.getLeftX() * MaxSpeed / 6,
+            0.0,
+            true) * MaxSpeed)
             
-        // Keep manual rotation control
-        .withRotationalRate(-joystick.getRightX() * MaxAngularRate / 2)
+        // Rotation to align parallel to the target
+        .withRotationalRate(-visionSubsystem.calculateParallelRotationPower(
+            -joystick.getRightX() * MaxAngularRate / 2,
+            true) * MaxAngularRate)
     )
 );
 
@@ -197,7 +199,7 @@ joystick.b().whileTrue(
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
             -joystick.getLeftY() * MaxSpeed / 6, // Default to manual control
-            -0.0762, // Target distance of 0.0 meters from AprilTag
+            0., // Target distance of 0.0 meters from AprilTag
             true) * MaxSpeed) // Scale down for smoother approach
             
         // Left/right movement to center with the target

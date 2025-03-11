@@ -68,17 +68,17 @@ public class Constants {
         
         public static final Transform3d CAMERA_OFFSET = null; // Units?
 		//Vision Rotation PID vars
-        public static double VR_Kp = 0.07;
+        public static double VR_Kp = 0.0125;
         public static double VR_Ki = 0.0;
         public static double VR_Kd = 0.0;
 
-        //Vision Drive PID vars
-        public static double VY_Kp = 0.03;
+        //Vision Drive PID vars Left and Right
+        public static double VY_Kp = 0.01;
         public static double VY_Ki = 0.0;
         public static double VY_Kd = 0.0;
 
-        //Vision Drive PID var
-        public static double VX_Kp = 0.125;
+        //Vision Drive PID var Forward and Back
+        public static double VX_Kp = 0.3;
         public static double VX_Ki = 0.0;
         public static double VX_Kd = 0.0;
     }

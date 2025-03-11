@@ -27,6 +27,7 @@ public class VisionSubsystem extends SubsystemBase {
     private PhotonPipelineResult result;
     
     // PID controllers for different axes of movement
+    public PIDController rotController = new PIDController(VisionConstants.VR_Kp, VisionConstants.VR_Ki, VisionConstants.VR_Kd);
     public PIDController driveControllerY = new PIDController(VisionConstants.VY_Kp, VisionConstants.VY_Ki, VisionConstants.VY_Kd);
     public PIDController driveControllerX = new PIDController(VisionConstants.VX_Kp, VisionConstants.VX_Ki, VisionConstants.VX_Kd);
 
@@ -34,7 +35,7 @@ public class VisionSubsystem extends SubsystemBase {
     
     // Transform from camera to robot center (measurements in meters)
     public static final Transform3d CAMERA_TO_ROBOT = 
-        new Transform3d(new Translation3d(.05, 0.0, .15), new Rotation3d(0, 0, 0));
+        new Transform3d(new Translation3d(0.127, 0.0, 0.3175), new Rotation3d(0, 0, 0));
     
     public VisionSubsystem() {
         // Initialize camera with name from constants
@@ -56,6 +57,7 @@ public class VisionSubsystem extends SubsystemBase {
         Shuffleboard.getTab("Vision").addNumber("Target Range", () -> getRange().orElse(0.0));
         
         // Add PIDs to Shuffleboard for tuning
+        Shuffleboard.getTab("Vision").add("Rotation PID", rotController);
         Shuffleboard.getTab("Vision").add("Y PID", driveControllerY);
         Shuffleboard.getTab("Vision").add("X PID", driveControllerX);
     }
@@ -74,6 +76,38 @@ public class VisionSubsystem extends SubsystemBase {
         return photonPoseEstimator.update(result);
     }
 
+    // In VisionSubsystem.java, add a method to get the tag's rotation relative to the camera
+public Optional<Double> getTagYaw() {
+    if (hasTarget()) {
+        // This gives us the yaw of the tag, which tells us the tag's orientation
+        return Optional.of(result.getBestTarget().getBestCameraToTarget().getRotation().getZ());
+    } else {
+        return Optional.empty();
+    }
+}
+
+// Add a method to calculate rotation needed for parallel alignment
+public double calculateParallelRotationPower(double defaultRotation, boolean enableVision) {
+    if (hasTarget() && enableVision) {
+        Optional<Double> tagYaw = getTagYaw();
+        if (tagYaw.isPresent()) {
+            double targetAngle;
+            // To align parallel, we want our rotation to be 90 degrees (π/2 radians) 
+            // offset from the tag's facing direction
+            if(tagYaw.get() >0) {
+                targetAngle = tagYaw.get() + 180;
+            } else {
+                targetAngle = tagYaw.get() - 180;
+            }
+            
+            // We still want to use the yaw to the target as our current angle,
+            // as we're calculating the difference between where we're pointed and where we want to point
+            return -rotController.calculate(getYaw().get(), targetAngle);
+        }
+    }
+    return defaultRotation;
+}
+
     /**
      * Checks if the camera sees any AprilTags
      */
@@ -87,6 +121,17 @@ public class VisionSubsystem extends SubsystemBase {
     public Optional<Double> getYaw() {
         if (hasTarget()) {
             return Optional.of(result.getBestTarget().getYaw());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Gets the pitch (vertical angle) to the best target
+     */
+    public Optional<Double> getPitch() {
+        if (hasTarget()) {
+            return Optional.of(result.getBestTarget().getPitch());
         } else {
             return Optional.empty();
         }
@@ -111,6 +156,21 @@ public class VisionSubsystem extends SubsystemBase {
             return Optional.of(result.getBestTarget().getBestCameraToTarget().getTranslation().getY());
         } else {
             return Optional.empty();
+        }
+    }
+
+    /**
+     * Calculates the rotation power needed to align with a target
+     * 
+     * @param defaultRotation Value to use when no target is visible
+     * @param enableVision Whether to use vision for alignment
+     * @return The calculated rotation power
+     */
+    public double calculateRotationPower(double defaultRotation, boolean enableVision) {
+        if (hasTarget() && enableVision) {
+            return -rotController.calculate(getYaw().get(), 0.0);
+        } else {
+            return defaultRotation;
         }
     }
 
