@@ -94,10 +94,10 @@ public double calculateParallelRotationPower(double defaultRotation, boolean ena
             double targetAngle;
             // To align parallel, we want our rotation to be 90 degrees (π/2 radians) 
             // offset from the tag's facing direction
-            if(tagYaw.get() >0) {
-                targetAngle = tagYaw.get() + 180;
+            if(tagYaw.get() > 0) {
+                targetAngle = tagYaw.get() + 90;
             } else {
-                targetAngle = tagYaw.get() - 180;
+                targetAngle = tagYaw.get() - 90;
             }
             
             // We still want to use the yaw to the target as our current angle,
@@ -201,7 +201,7 @@ public double calculateParallelRotationPower(double defaultRotation, boolean ena
     public double calculateYPower(double defaultPower, double targetOffset, boolean enableVision) {
         if (hasTarget() && enableVision) {
             // Use the yaw for centering - negative because positive yaw means target is to the right
-            return driveControllerY.calculate(getYaw().get(), targetOffset);
+            return driveControllerY.calculate(getYaw().get(), -targetOffset);
         } else {
             return defaultPower;
         }

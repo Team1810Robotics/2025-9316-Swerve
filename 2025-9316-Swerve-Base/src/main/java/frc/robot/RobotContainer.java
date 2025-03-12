@@ -184,11 +184,11 @@ joystick.x().whileTrue(
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
             -joystick.getLeftX() * MaxSpeed / 6,
-            0.0,
+            18.0,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
-        .withRotationalRate(-visionSubsystem.calculateParallelRotationPower(
+        .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
             -joystick.getRightX() * MaxAngularRate / 2,
             true) * MaxAngularRate)
     )
