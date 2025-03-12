@@ -178,13 +178,13 @@ joystick.x().whileTrue(
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
             -joystick.getLeftY() * MaxSpeed / 6,
-            0.5,
+            0.5-.17,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
             -joystick.getLeftX() * MaxSpeed / 6,
-            18.0,
+            12.0,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
@@ -198,18 +198,20 @@ joystick.b().whileTrue(
     drivetrain.applyRequest(() -> visDrive
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
-            -joystick.getLeftY() * MaxSpeed / 6, // Default to manual control
-            0., // Target distance of 0.0 meters from AprilTag
-            true) * MaxSpeed) // Scale down for smoother approach
+            -joystick.getLeftY() * MaxSpeed / 6,
+            0.1,
+            true) * MaxSpeed/6)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
-            -joystick.getLeftX() * MaxSpeed / 6, // Default to manual control
-            0.0, // Target centered (0 offset)
-            true) * MaxSpeed) // Scale down for smoother movement
+            -joystick.getLeftX() * MaxSpeed / 6,
+            -22.0,
+            true) * MaxSpeed)
             
-        // Keep manual rotation control
-        .withRotationalRate(-joystick.getRightX() * MaxAngularRate / 2)
+        // Rotation to align parallel to the target
+        .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
+            -joystick.getRightX() * MaxAngularRate / 2,
+            true) * MaxAngularRate)
     )
 );
 
@@ -218,10 +220,10 @@ joystick.b().whileTrue(
            xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
            joystick.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
            joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-           joystick.b().whileTrue(drivetrain.applyRequest(() ->
+           //joystick.b().whileTrue(drivetrain.applyRequest(() ->
 
-            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        ));
+            //point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        //));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
