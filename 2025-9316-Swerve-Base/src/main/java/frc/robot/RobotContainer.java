@@ -261,9 +261,8 @@ joystick.b().whileTrue(
           .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
         // Manual Adjustments for Elevator
-        //DO NOT USE
-        xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
-        xbox.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+        gamepadManipulator.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
+        gamepadManipulator.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
         
 
         drivetrain.registerTelemetry(logger::telemeterize);

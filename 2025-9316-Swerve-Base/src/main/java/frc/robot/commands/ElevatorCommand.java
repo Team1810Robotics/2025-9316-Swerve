@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.io.Console;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CoralHandlerConstants;
@@ -28,6 +30,8 @@ public class ElevatorCommand extends Command {
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT+elevatorSubsystem.getElevatorPosition() : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT+elevatorSubsystem.getElevatorPosition();
        if (elevatorSubsystem.isWithinBounds(this.adjustment)){
         this.targetPosition = this.adjustment;
+       } else {
+        System.out.println("OUT OF BOUNDS!");
        }
         addRequirements(elevatorSubsystem);
     }
@@ -43,12 +47,7 @@ public class ElevatorCommand extends Command {
 
     @Override
     public void execute() {
-
-        if (adjustment == 0) {
-            elevatorSubsystem.setElevatorPosition(targetPosition);
-        } else {//TODO make manual adjustment work
-            elevatorSubsystem.setElevatorPosition(targetPosition);
-        }
+        elevatorSubsystem.setElevatorPosition(targetPosition);
     }
 
     @Override
