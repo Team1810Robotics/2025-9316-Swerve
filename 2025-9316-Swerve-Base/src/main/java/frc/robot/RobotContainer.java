@@ -179,13 +179,13 @@ xboxDrive.x().whileTrue(
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
             -xboxDrive.getLeftY() * MaxSpeed / 6,
-            0.5-.17,
+            0.26,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
             -xboxDrive.getLeftX() * MaxSpeed / 6,
-            12.0,
+            -10,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target

@@ -108,7 +108,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                     stop();
                 }else{
                     if(elevatorPower < 0){
-                        elevatorMotor.set(elevatorPower/100);
+                        elevatorMotor.set(elevatorPower/50);
                     }else{
                         elevatorMotor.set(elevatorPower);
                     }

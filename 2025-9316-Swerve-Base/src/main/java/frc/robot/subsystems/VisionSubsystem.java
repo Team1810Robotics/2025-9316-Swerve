@@ -35,7 +35,7 @@ public class VisionSubsystem extends SubsystemBase {
     
     // Transform from camera to robot center (measurements in meters)
     public static final Transform3d CAMERA_TO_ROBOT = 
-        new Transform3d(new Translation3d(0.127, 0.0, 0.3175), new Rotation3d(0, 0, 0));
+        new Transform3d(new Translation3d(0.05, 0.0, 0.1), new Rotation3d(0, 0, 0));
     
     public VisionSubsystem() {
         // Initialize camera with name from constants
