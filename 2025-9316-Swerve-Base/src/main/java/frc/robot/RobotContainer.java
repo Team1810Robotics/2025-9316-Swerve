@@ -262,8 +262,8 @@ joystick.b().whileTrue(
 
         // Manual Adjustments for Elevator
         //DO NOT USE
-        //xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
-        //xbox.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+        xbox.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
+        xbox.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
         
 
         drivetrain.registerTelemetry(logger::telemeterize);

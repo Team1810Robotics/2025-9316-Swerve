@@ -25,8 +25,10 @@ public class ElevatorCommand extends Command {
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUp) {
         this.adjustment = 0.0;
         this.elevatorSubsystem = elevatorSubsystem;
-        this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
-        this.targetPosition += this.adjustment;
+        this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT+elevatorSubsystem.getElevatorPosition() : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT+elevatorSubsystem.getElevatorPosition();
+       if (elevatorSubsystem.isWithinBounds(this.adjustment)){
+        this.targetPosition = this.adjustment;
+       }
         addRequirements(elevatorSubsystem);
     }
 
@@ -45,7 +47,7 @@ public class ElevatorCommand extends Command {
         if (adjustment == 0) {
             elevatorSubsystem.setElevatorPosition(targetPosition);
         } else {//TODO make manual adjustment work
-            //elevatorSubsystem.setElevatorPosition(targetPosition, true);
+            elevatorSubsystem.setElevatorPosition(targetPosition);
         }
     }
 
