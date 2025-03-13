@@ -262,9 +262,9 @@ xboxDrive.b().whileTrue(
           .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
         // Manual Adjustments for Elevator
-        //DO NOT USE
-        //gamepadManipulatorpovUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
-        //gamepadManipulatorpovDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+        gamepadManipulator.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
+        gamepadManipulator.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+
         
 
         drivetrain.registerTelemetry(logger::telemeterize);
