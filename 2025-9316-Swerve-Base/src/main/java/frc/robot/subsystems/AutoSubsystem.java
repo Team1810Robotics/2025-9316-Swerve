@@ -1,5 +1,5 @@
 package frc.robot.subsystems;
-
+// gamepadManipulator = xbox, and joystick now = xboxDrive
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -135,6 +135,5 @@ public class AutoSubsystem extends SubsystemBase {
         logger.info("Executing grab Algae Auto Mode");
         return new AlgaeCommand(algaeSubsystem, false, true);
     }
-
 
 }
