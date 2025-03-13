@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+// gamepadManipulator = xbox, and joystick now = xboxDrive
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.commands.AlgaeCommand;
+import frc.robot.commands.AutoCoralReleaseCommand;
 import frc.robot.commands.ElevatorCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.TunerConstants;
@@ -74,8 +75,8 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
-    private final CommandXboxController joystick = new CommandXboxController(0);  //Driver Controller
-    private final CommandXboxController xbox = new CommandXboxController(1);      //Manipulator Controller
+    private final CommandXboxController xboxDrive = new CommandXboxController(0);  //Driver Controller
+    private final CommandXboxController gamepadManipulator = new CommandXboxController(1);      //Manipulator Controller
  
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -163,9 +164,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically            
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * -joystick.getLeftY()* Math.signum(joystick.getLeftY()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * -joystick.getLeftX()* Math.signum(joystick.getLeftX()) * MaxSpeed/(joystick.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/(joystick.rightTrigger().getAsBoolean() ? 1 : 2)) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-xboxDrive.getLeftY() * -xboxDrive.getLeftY()* Math.signum(xboxDrive.getLeftY()) * MaxSpeed/(xboxDrive.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
+                    .withVelocityY(-xboxDrive.getLeftX() * -xboxDrive.getLeftX()* Math.signum(xboxDrive.getLeftX()) * MaxSpeed/(xboxDrive.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
+                    .withRotationalRate(-xboxDrive.getRightX() * MaxAngularRate/(xboxDrive.rightTrigger().getAsBoolean() ? 1 : 2)) // Drive counterclockwise with negative X (left)
             )
         );
         
@@ -173,96 +174,97 @@ public class RobotContainer {
 
 // In RobotContainer.java, replace the vision alignment binding with:
 
-joystick.x().whileTrue(
+xboxDrive.x().whileTrue(
     drivetrain.applyRequest(() -> visDrive
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
-            -joystick.getLeftY() * MaxSpeed / 6,
+            -xboxDrive.getLeftY() * MaxSpeed / 6,
             0.5-.17,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
-            -joystick.getLeftX() * MaxSpeed / 6,
+            -xboxDrive.getLeftX() * MaxSpeed / 6,
             12.0,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
         .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
-            -joystick.getRightX() * MaxAngularRate / 2,
+            -xboxDrive.getRightX() * MaxAngularRate / 2,
             true) * MaxAngularRate)
     )
 );
 
-joystick.b().whileTrue(
+xboxDrive.b().whileTrue(
     drivetrain.applyRequest(() -> visDrive
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
-            -joystick.getLeftY() * MaxSpeed / 6,
+            -xboxDrive.getLeftY() * MaxSpeed / 6,
             0.1,
             true) * MaxSpeed/6)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
-            -joystick.getLeftX() * MaxSpeed / 6,
+            -xboxDrive.getLeftX() * MaxSpeed / 6,
             -22.0,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
         .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
-            -joystick.getRightX() * MaxAngularRate / 2,
+            -xboxDrive.getRightX() * MaxAngularRate / 2,
             true) * MaxAngularRate)
     )
 );
 
 
 
-           xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
-           joystick.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
-           joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-           //joystick.b().whileTrue(drivetrain.applyRequest(() ->
+           gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
+           xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
+           xboxDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
+           //xboxDrive.b().whileTrue(drivetrain.applyRequest(() ->
 
-            //point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+            //point.withModuleDirection(new Rotation2d(-xboxDrive.getLeftY(), -xboxDrive.getLeftX()))
         //));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        xboxDrive.back().and(xboxDrive.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        xboxDrive.back().and(xboxDrive.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        xboxDrive.start().and(xboxDrive.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        xboxDrive.start().and(xboxDrive.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on a button press
-        joystick.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        xboxDrive.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Algae Control - Driver controls intake, manipulator controls eject 
-        joystick.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false,true));
-        xbox.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true,false));
+        xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false,true));
+        gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true,false));
 
-        
+       
 
         // Elevator Controls
-        xbox.a().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));    // Intake
-        xbox.b().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));        // L1
-        xbox.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));        // L2
-        xbox.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1));        // L3
-        xbox.leftBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2));        // L3
-
-        xbox.y().whileTrue(new InstantCommand(() -> coralHandler.nudge()))
+        gamepadManipulator.a().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION));    // Intake
+        gamepadManipulator.b().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION));        // L1
+        gamepadManipulator.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION));        // L2
+        gamepadManipulator.rightBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae1));        // L3
+        gamepadManipulator.leftBumper().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.Algae2));        // L3
+        
+        gamepadManipulator.y().whileTrue(new InstantCommand(() -> coralHandler.nudge()))
         .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
         // Elevator Emergency Stop
-        xbox.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));
+        gamepadManipulator.back().onTrue(new InstantCommand(() -> elevatorSubsystem.stop()));
 
         //Eject Coral
-        xbox.rightTrigger().whileTrue(new InstantCommand(() -> coralHandler.startOuttake()))
+        gamepadManipulator.rightTrigger().whileTrue(new InstantCommand(() -> coralHandler.startOuttake()))
                     .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
-        xbox.start().whileTrue(new InstantCommand(() -> coralHandler.back()))
+        gamepadManipulator.start().whileTrue(new InstantCommand(() -> coralHandler.back()))
           .onFalse(new InstantCommand(() -> coralHandler.stopCoralHandler()));
 
         // Manual Adjustments for Elevator
         gamepadManipulator.povUp().onTrue(new ElevatorCommand(elevatorSubsystem, true));     // Manual Up
         gamepadManipulator.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, false));  // Manual Down
+
         
 
         drivetrain.registerTelemetry(logger::telemeterize);
