@@ -24,21 +24,32 @@ public class AutoVisionCommand  extends Command{
         this.visionSubsystem = visionSubsystem;
         this.coralHandlerSubsystem = coralHandlerSubsystem;
         this.drivetrain = drivetrain;
+        addRequirements(visionSubsystem , drivetrain);
     }
 
 
     @Override
     public void execute() {
+        if (!visionSubsystem.hasTarget()) {
+            System.out.println("AutoVisionCommand: No target detected.");
+            drivetrain.applyRequest(() -> visDrive
+                .withVelocityX(0)
+                .withVelocityY(0)
+                .withRotationalRate(0));
+            return;
+        }   
+        System.out.println("AutoVisionCommand: target detected.");
+
         drivetrain.applyRequest(() -> visDrive
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
-           0,
+           .5,
             0.26,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
-            0,
+            .5,
             -10,
             true) * MaxSpeed)
             
@@ -49,7 +60,8 @@ public class AutoVisionCommand  extends Command{
     );
     }
     public boolean isFinished() {
-        return false;
+        double range = visionSubsystem.getRange().orElse(.25);
+        return range < 0.5;
         //return visionSubsystem.getRange().orElse(0.0) < 0.5;
     }
 

@@ -70,6 +70,8 @@ public class VisionSubsystem extends SubsystemBase {
         if (result.hasTargets()) {
             System.out.println("Target Detected: Yaw = " + result.getBestTarget().getYaw() +
                                ", Range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getX());
+                               //", Horizontal Offset = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getY()+
+                               //", range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getY();
         } else {
             System.out.println("No target detected.");
         }
