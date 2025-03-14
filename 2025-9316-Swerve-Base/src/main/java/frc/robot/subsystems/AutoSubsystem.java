@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AlgaeCommand;
 import frc.robot.commands.AutoCoralReleaseCommand;
+import frc.robot.commands.AutoCoralStopCommand;
+import frc.robot.commands.AutoVisionCommand;
 import frc.robot.commands.ElevatorCommand;
 
 public class AutoSubsystem extends SubsystemBase {
@@ -69,24 +71,24 @@ public class AutoSubsystem extends SubsystemBase {
             }
         };
     }
+    public static Command AutoVision(CoralHandlerSubsystem coralHandlerSubsystem, VisionSubsystem visionSubsystem, CommandSwerveDrivetrain drivetrain) {
+            return new SequentialCommandGroup(
+                new AutoVisionCommand(coralHandlerSubsystem,visionSubsystem,drivetrain).withTimeout(2)
+                //new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(1),
+                //new AutoCoralStopCommand(coralHandlerSubsystem).withTimeout(1)
+            );
+    }
     //Drop the Coral, get Algae at L2 
     public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
     return new SequentialCommandGroup(
-        //new AlgaeCommand(algaeSubsystem, false, true),
 
         new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION).withTimeout(2),
 
-        new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(2.0)
-        //new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION).withTimeout(2)
-        //new AlgaeCommand(algaeSubsystem, false, true).withTimeout(2),
-        //new WaitCommand(2.5),
+        new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(2.0),
 
-        // Step 1: Output Coral
-        //new WaitCommand(1.5)
-        //new InstantCommand(() -> coralHandlerSubsystem.stopCoralHandler(), coralHandlerSubsystem),
-        //new WaitCommand(1.5),
-        //new AlgaeCommand(algaeSubsystem, true, false),
-        //new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)      
+        new AutoCoralStopCommand(coralHandlerSubsystem).withTimeout(2),
+
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)
     );
     }
 

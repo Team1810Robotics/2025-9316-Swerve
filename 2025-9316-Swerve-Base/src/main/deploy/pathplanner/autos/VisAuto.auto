@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "NoVision1"
+            "pathName": "VisPath"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AutoExchange"
+            "name": "AutoVisionCommand"
           }
         }
       ]

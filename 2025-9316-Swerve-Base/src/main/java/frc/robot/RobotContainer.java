@@ -96,7 +96,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
     public RobotContainer(){
         NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-
+        NamedCommands.registerCommand("AutoVisionCommand", autoSubsystem.AutoVision(coralHandler, visionSubsystem, drivetrain).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         //individual commands
         NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler));
         NamedCommands.registerCommand("L2Pos", autoSubsystem.L2Pos(elevatorSubsystem));
@@ -285,7 +285,7 @@ xboxDrive.b().whileTrue(
         autoChooser.addOption("IdealAuto", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.IdealAuto));
        // autoChooser.addOption("Reef Processor", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.ReefProcessor));
         //autoChooser.addOption("OL - CL2", AutoSubsystem.getAutoCommand(AutoSubsystem.AutoMode.OL_CL2));
-    
+        
         
           // Display on SmartDashboard
       Shuffleboard.getTab("Autonomous").add(autoChooser);
