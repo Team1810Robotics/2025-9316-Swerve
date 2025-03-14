@@ -82,7 +82,7 @@ public class AutoSubsystem extends SubsystemBase {
     public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
     return new SequentialCommandGroup(
 
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L2_POSITION).withTimeout(2),
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(2),
 
         new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(2.0),
 
