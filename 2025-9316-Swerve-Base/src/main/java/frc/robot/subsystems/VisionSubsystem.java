@@ -66,6 +66,13 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
         // Update the latest result from the camera
         result = camera.getLatestResult();
+        System.out.println("Camera Connected: " + camera.isConnected());
+        if (result.hasTargets()) {
+            System.out.println("Target Detected: Yaw = " + result.getBestTarget().getYaw() +
+                               ", Range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getX());
+        } else {
+            System.out.println("No target detected.");
+        }
     }
 
     /**
