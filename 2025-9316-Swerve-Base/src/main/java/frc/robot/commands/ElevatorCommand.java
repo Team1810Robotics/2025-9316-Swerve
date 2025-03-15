@@ -30,8 +30,8 @@ public class ElevatorCommand extends Command {
         //sam was here
         this.elevatorSubsystem = elevatorSubsystem;
 
-        this.adjustment = isUp ? (ElevatorSubsystem.MANUAL_ADJUST_INCREMENT + elevatorSubsystem.getElevatorPosition()) : (-ElevatorSubsystem.MANUAL_ADJUST_INCREMENT + elevatorSubsystem.getElevatorPosition());
-
+        this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT  : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT );
+        this.targetPosition = elevatorSubsystem.getElevatorPosition() + adjustment;
         System.out.println("Setting target position to adjustment: " + adjustment);
         this.targetPosition = this.adjustment;
 
@@ -40,27 +40,28 @@ public class ElevatorCommand extends Command {
     }
 
     @Override
-    public void initialize() {
-        // System.out.println(adjustment);
-        // if (targetPosition != null) {
-        //     System.out.println("Moving Elevator to: " + targetPosition);
-        // } else {
-        //     System.out.println("Adjusting Elevator by: " + adjustment);
-        // } 
+    public void initialize() {  
+         System.out.println(adjustment);
+         if (targetPosition != null) {
+             System.out.println("Moving Elevator to: " + targetPosition);
+         } else {
+             System.out.println("Adjusting Elevator by: " + adjustment);
+         } 
     }
 
     @Override
     public void execute() {
+        System.out.println("Executing: Moving to " + targetPosition);
         elevatorSubsystem.setElevatorPosition(targetPosition);
     }
 
     @Override
     public boolean isFinished() {
+        //Carter - try this instead of returning false if manual fix doesn't work 
+        //return Math.abs(elevatorSubsystem.getElevatorPosition() -  < 0.1);
         return false;
-        /* if (targetPosition != null) {
-            return false;
-        }
-        return true; // Manual adjustments finish immediately after the adjustment */
+         
+        //return true; // Manual adjustments finish immediately after the adjustment 
     }
 
     @Override
