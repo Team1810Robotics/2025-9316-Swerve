@@ -32,8 +32,8 @@ public class ElevatorCommand extends Command {
 
         this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT  : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
         this.targetPosition = elevatorSubsystem.getElevatorPosition() + adjustment;
-        System.out.println("Setting target position to adjustment: " + adjustment);
-        this.targetPosition = this.adjustment;
+        System.out.println("Setting target position to adjustment: " + targetPosition);
+        
 
 
         addRequirements(elevatorSubsystem);
