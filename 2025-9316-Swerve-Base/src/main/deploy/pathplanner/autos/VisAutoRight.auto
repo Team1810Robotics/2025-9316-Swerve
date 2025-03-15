@@ -7,13 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "VisPath"
+            "pathName": "VisPathRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1Pos"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "AutoVisionCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoExchange"
           }
         }
       ]

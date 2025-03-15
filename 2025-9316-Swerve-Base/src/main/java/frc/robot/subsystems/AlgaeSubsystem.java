@@ -21,12 +21,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class AlgaeSubsystem extends SubsystemBase {
    private SparkMax motor;
 
-   public Rev2mDistanceSensor distanceSensor;
+//    public Rev2mDistanceSensor distanceSensor;
    public LEDSubsystem ledSubsystem;
 
 
     public AlgaeSubsystem() {
-        distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
+        // distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
         motor = new SparkMax(AlgaeConstants.MOTOR_ID, MotorType.kBrushless);
 
         //Shuffleboard.getTab("Algae").addNumber("Algae Distance", () -> distanceSensor.GetRange());
@@ -35,19 +35,15 @@ public class AlgaeSubsystem extends SubsystemBase {
     public void setSpeed(double speed){
         motor.set(speed);
     }
+ 
 
-    public void reset(){
-    }
-
-    public boolean getIsValidRange(){
-        return distanceSensor.isRangeValid();
-    }    
-
-     public double getDistanceSensor() {
-         if (true){distanceSensor.isRangeValid();
-             return distanceSensor.getRange();
-         } else {return -1;}
-     }
+    //  public double getDistanceSensor() {
+    //     if (distanceSensor.isRangeValid()) { 
+    //         return distanceSensor.getRange();
+    //     } else {
+    //         return -1;
+    //     }
+    //  }
 
      private void setLEDColor(int[] color, String colorName) {
         // Placeholder for LED control

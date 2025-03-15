@@ -1,14 +1,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.CoralHandlerConstants;
 import frc.robot.Constants.ElevatorConstants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -21,8 +17,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import frc.robot.Constants.LEDConstants;
-import frc.robot.subsystems.LEDSubsystem;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -95,6 +89,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
             Shuffleboard.getTab("Elevator").addNumber("Encoder Raw", () -> -elevatorEncoder.get());
             Shuffleboard.getTab("Elevator").addNumber("Elevator Height", () -> getElevatorPosition());
+
+            Shuffleboard.getTab("Sam").addNumber("Target Position", () -> targetPosition);
+
         }
     
         // Setpoint method for PID control

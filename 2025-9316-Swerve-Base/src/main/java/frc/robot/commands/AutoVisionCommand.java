@@ -40,16 +40,44 @@ public class AutoVisionCommand  extends Command{
         }   
         System.out.println("AutoVisionCommand: target detected.");
 
-        drivetrain.applyRequest(() -> visDrive
+        // Calculate the PID outputs
+        double xPower = visionSubsystem.calculateXPower(0, 0.26, true);
+        double yPower = visionSubsystem.calculateYPower(0, .04, true);
+        double rotationPower = visionSubsystem.calculateParallelRotationPower(0, true);
+       
+        // Compute final velocities
+        double velocityX = -xPower * MaxSpeed;
+        double velocityY = -yPower * MaxSpeed;
+        double rotationalRate = -rotationPower * MaxAngularRate;
+       
+        // Debug prints to verify computed values
+        System.out.println("Calculated xPower: " + xPower + ", velocityX: " + velocityX);
+        System.out.println("Calculated yPower: " + yPower + ", velocityY: " + velocityY);
+        System.out.println("Calculated rotationPower: " + rotationPower + ", rotationalRate: " + rotationalRate);
+        System.out.println("Current range: " + visionSubsystem.getRange().orElse(-1.0));
+       
+        // Apply the drive command
+        // Create the request
+        SwerveRequest.RobotCentric request = visDrive
+        .withVelocityX(velocityX)
+        .withVelocityY(velocityY)
+        .withRotationalRate(rotationalRate);
+
+        System.out.println(request);
+
+        // Apply the request
+        drivetrain.setControl(request);
+
+        /*drivetrain.applyRequest(() -> visDrive
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
-           .5,
+           0,
             0.26,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
-            .5,
+            0,
             -10,
             true) * MaxSpeed)
             
@@ -57,11 +85,11 @@ public class AutoVisionCommand  extends Command{
         .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
             0,
             true) * MaxAngularRate)
-    );
+    ); */
     }
     public boolean isFinished() {
-        double range = visionSubsystem.getRange().orElse(.25);
-        return range < 0.5;
+        double range = visionSubsystem.getRange().orElse(0.0);
+        return range < 0.25;
         //return visionSubsystem.getRange().orElse(0.0) < 0.5;
     }
 

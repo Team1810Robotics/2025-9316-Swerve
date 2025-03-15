@@ -60,7 +60,7 @@ public class Constants {
     
 
     public static final class VisionConstants {
-        public static final String TARGET_CAMERA = "Arducam_UC-852_USB_Camera";
+        public static final String TARGET_CAMERA = "Camera";
         public static final double CAMERA_HEIGHT = 0.0; // Units? (e.g., meters)
         public static final double APRILTAG_RED_SHOOTER_HEIGHT = 0.0; // Units?
         public static final double CAMERA_PITCH = 0.0; // Units? (e.g., degrees)
@@ -74,11 +74,11 @@ public class Constants {
 
         //Vision Drive PID vars Left and Right
         public static double VY_Kp = 0.006;
-        public static double VY_Ki = 0.0001;
-        public static double VY_Kd = 0.000;
+        public static double VY_Ki = 0.00001;
+        public static double VY_Kd = 0.00001;
 
         //Vision Drive PID var Forward and Back
-        public static double VX_Kp = 0.2;
+        public static double VX_Kp = 0.275;
         public static double VX_Ki = 0.0;
         public static double VX_Kd = 0.0;
     }

@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.commands.AlgaeCommand;
 import frc.robot.commands.AutoCoralReleaseCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.AlgaeCommand.AlgaeMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeSubsystem;
@@ -100,15 +101,16 @@ public class RobotContainer {
         //individual commands
         NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler));
         NamedCommands.registerCommand("L2Pos", autoSubsystem.L2Pos(elevatorSubsystem));
-        NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem));
+        NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("IntakePos", autoSubsystem.IntakePos(elevatorSubsystem));
         NamedCommands.registerCommand("Algae1Pos", autoSubsystem.IntakePos(elevatorSubsystem));
+        
         NamedCommands.registerCommand("Algae2Pos", autoSubsystem.IntakePos(elevatorSubsystem));
         NamedCommands.registerCommand("GrabAlgae", autoSubsystem.GrabAlgae(algaeSubsystem));
         NamedCommands.registerCommand("EjectAlgae", autoSubsystem.EjectAlgae(algaeSubsystem));
 
 
-        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, false,false));
+        algaeSubsystem.setDefaultCommand(new AlgaeCommand(algaeSubsystem, AlgaeMode.NONE));
    
         configureBindings();
         autoChooser = AutoBuilder.buildAutoChooser("");
@@ -147,11 +149,11 @@ public class RobotContainer {
             .withPosition(2,2).withSize(2,1);
 
         //Algae - Distance
-        mainTab.addBoolean("isValidDistance", () -> algaeSubsystem.getIsValidRange())
-            .withPosition(6,0).withSize(2,1);
+        // mainTab.addBoolean("isValidDistance", () -> algaeSubsystem.getIsValidRange())
+        //     .withPosition(6,0).withSize(2,1);
 
-        mainTab.addDouble("distance Sensor", () -> algaeSubsystem.getDistanceSensor())
-            .withPosition(6,1).withSize(2,1);
+        // mainTab.addDouble("distance Sensor", () -> algaeSubsystem.getDistanceSensor())
+        //     .withPosition(6,1).withSize(2,1);
             
 
     }
@@ -179,17 +181,17 @@ xboxDrive.x().whileTrue(
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
             -xboxDrive.getLeftY() * MaxSpeed / 6,
-            0.26,
+            0.25,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
-        .withVelocityY(visionSubsystem.calculateYPower(
+        .withVelocityY(-visionSubsystem.calculateYPower(
             -xboxDrive.getLeftX() * MaxSpeed / 6,
-            -10,
+            .06,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
-        .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
+        .withRotationalRate(-visionSubsystem.calculateParallelRotationPower(
             -xboxDrive.getRightX() * MaxAngularRate / 2,
             true) * MaxAngularRate)
     )
@@ -218,8 +220,8 @@ xboxDrive.b().whileTrue(
 
 
 
-           gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true, false ));
-           xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false, true ));
+           gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.EJECT));
+           xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.INTAKE));
            xboxDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
            //xboxDrive.b().whileTrue(drivetrain.applyRequest(() ->
 
@@ -237,8 +239,8 @@ xboxDrive.b().whileTrue(
         xboxDrive.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Algae Control - Driver controls intake, manipulator controls eject 
-        xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, false,true));
-        gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, true,false));
+        xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.INTAKE));
+        gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.EJECT));
 
        
 

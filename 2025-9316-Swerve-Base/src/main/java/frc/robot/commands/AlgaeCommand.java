@@ -5,12 +5,24 @@ import frc.robot.subsystems.AlgaeSubsystem;
 @SuppressWarnings("unused")
 public class AlgaeCommand extends Command {
     private AlgaeSubsystem algaeSubsystem;
- private boolean eject;
- private boolean intake;
-    public AlgaeCommand(AlgaeSubsystem algaeSubsystem, boolean eject,boolean intake){
+
+    AlgaeMode mode;
+
+    public enum AlgaeMode {
+        EJECT,
+        INTAKE,
+        NONE
+    }
+
+    /**
+     * eject was first
+     * @param algaeSubsystem
+     * @param mode
+     */
+    public AlgaeCommand(AlgaeSubsystem algaeSubsystem, AlgaeMode mode){
         this.algaeSubsystem = algaeSubsystem;
-        this.eject = eject;
-        this.intake = intake;
+        this.mode = mode;
+
         addRequirements(algaeSubsystem);
     }
     
@@ -18,7 +30,7 @@ public class AlgaeCommand extends Command {
  
     @Override
     public void initialize() {
-        algaeSubsystem.distanceSensor.setAutomaticMode(true);
+        // algaeSubsystem.distanceSensor.setAutomaticMode(true);
     }
 
     
@@ -31,12 +43,12 @@ public class AlgaeCommand extends Command {
          * if the distance is less than 1m and greater than 8 cm than the motor runs normally
          * if the distance is less than 8 cm then the motor runs slowly.
          */
-        double distance = algaeSubsystem.getDistanceSensor();
-        if (intake){
+        // double distance = algaeSubsystem.getDistanceSensor();
+        if (mode == AlgaeMode.INTAKE){
             algaeSubsystem.setSpeed(0.4);
            
         }else{
-            if (eject){
+            if (mode == AlgaeMode.EJECT){
                 algaeSubsystem.setSpeed(-1);
            
             }else {

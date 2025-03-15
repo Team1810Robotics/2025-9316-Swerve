@@ -66,14 +66,14 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
         // Update the latest result from the camera
         result = camera.getLatestResult();
-        System.out.println("Camera Connected: " + camera.isConnected());
+        //System.out.println("Camera Connected: " + camera.isConnected());
         if (result.hasTargets()) {
-            System.out.println("Target Detected: Yaw = " + result.getBestTarget().getYaw() +
-                               ", Range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getX());
+            //System.out.println("Target Detected: Yaw = " + result.getBestTarget().getYaw() +
+            //                   ", Range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getX());
                                //", Horizontal Offset = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getY()+
                                //", range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getY();
         } else {
-            System.out.println("No target detected.");
+            // System.out.println("No target detected.");
         }
     }
 
@@ -104,13 +104,14 @@ public double calculateParallelRotationPower(double defaultRotation, boolean ena
             // To align parallel, we want our rotation to be 90 degrees (π/2 radians) 
             // offset from the tag's facing direction
             if(tagYaw.get() > 0) {
-                targetAngle = tagYaw.get() + 90;
+                targetAngle = 90;
             } else {
-                targetAngle = tagYaw.get() - 90;
+                targetAngle = -90;
             }
             
             // We still want to use the yaw to the target as our current angle,
             // as we're calculating the difference between where we're pointed and where we want to point
+            System.out.println("RotPower:" + -rotController.calculate(getYaw().get(), targetAngle));
             return -rotController.calculate(getYaw().get(), targetAngle);
         }
     }
@@ -193,6 +194,7 @@ public double calculateParallelRotationPower(double defaultRotation, boolean ena
      */
     public double calculateXPower(double defaultPower, double targetDistance, boolean enableVision) {
         if (hasTarget() && enableVision) {
+            System.out.println("Xpower:" + driveControllerX.calculate(getRange().get(), targetDistance));
             return driveControllerX.calculate(getRange().get(), targetDistance);
         } else {
             return defaultPower;
@@ -210,6 +212,7 @@ public double calculateParallelRotationPower(double defaultRotation, boolean ena
     public double calculateYPower(double defaultPower, double targetOffset, boolean enableVision) {
         if (hasTarget() && enableVision) {
             // Use the yaw for centering - negative because positive yaw means target is to the right
+            System.out.println("Ypower:" + driveControllerY.calculate(getYaw().get(), -targetOffset));
             return driveControllerY.calculate(getYaw().get(), -targetOffset);
         } else {
             return defaultPower;

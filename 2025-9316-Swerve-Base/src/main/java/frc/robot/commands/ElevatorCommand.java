@@ -1,10 +1,6 @@
 package frc.robot.commands;
 
-import java.io.Console;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.CoralHandlerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorCommand extends Command {
@@ -18,31 +14,39 @@ public class ElevatorCommand extends Command {
         this.elevatorSubsystem = elevatorSubsystem;
         this.targetPosition = targetPosition;
         this.adjustment = 0.0;
+
         addRequirements(elevatorSubsystem);
     }
 
     // TODO make manual adjustment work
     // Currently instead of setting the target position to the manual adjust it instead sets it to -.5 or .5
     //I actually just made some changes but they prob still will not work - needs testing
+    /**
+     * Manual
+     * @param elevatorSubsystem
+     * @param isUp manual up true, manual down false
+     */
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUp) {
-        this.adjustment = 0.0;
+        //sam was here
         this.elevatorSubsystem = elevatorSubsystem;
-        this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT+elevatorSubsystem.getElevatorPosition() : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT+elevatorSubsystem.getElevatorPosition();
-       if (elevatorSubsystem.isWithinBounds(this.adjustment)){
+
+        this.adjustment = isUp ? (ElevatorSubsystem.MANUAL_ADJUST_INCREMENT + elevatorSubsystem.getElevatorPosition()) : (-ElevatorSubsystem.MANUAL_ADJUST_INCREMENT + elevatorSubsystem.getElevatorPosition());
+
+        System.out.println("Setting target position to adjustment: " + adjustment);
         this.targetPosition = this.adjustment;
-       } else {
-        System.out.println("OUT OF BOUNDS!");
-       }
+
+
         addRequirements(elevatorSubsystem);
     }
 
     @Override
     public void initialize() {
-/*         if (targetPosition != null) {
-            System.out.println("Moving Elevator to: " + targetPosition);
-        } else {
-            System.out.println("Adjusting Elevator by: " + adjustment);
-        } */
+        // System.out.println(adjustment);
+        // if (targetPosition != null) {
+        //     System.out.println("Moving Elevator to: " + targetPosition);
+        // } else {
+        //     System.out.println("Adjusting Elevator by: " + adjustment);
+        // } 
     }
 
     @Override
@@ -61,10 +65,6 @@ public class ElevatorCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-            System.out.println("Elevator Command Interrupted");
-        } else {
-            System.out.println("Elevator Command Complete");
-        }
+        elevatorSubsystem.stop();
     }
 }
