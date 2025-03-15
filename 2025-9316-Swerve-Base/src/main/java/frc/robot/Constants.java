@@ -65,6 +65,10 @@ public class Constants {
         public static final double APRILTAG_RED_SHOOTER_HEIGHT = 0.0; // Units?
         public static final double CAMERA_PITCH = 0.0; // Units? (e.g., degrees)
 
+        public static final double xOffset = .25;
+        public static final double yOffsetLeft = 0.06;
+        public static final double yOffsetRight = -.1;
+
         
         public static final Transform3d CAMERA_OFFSET = null; // Units?
 		//Vision Rotation PID vars

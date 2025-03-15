@@ -104,7 +104,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("IntakePos", autoSubsystem.IntakePos(elevatorSubsystem));
         NamedCommands.registerCommand("Algae1Pos", autoSubsystem.IntakePos(elevatorSubsystem));
-        
+
         NamedCommands.registerCommand("Algae2Pos", autoSubsystem.IntakePos(elevatorSubsystem));
         NamedCommands.registerCommand("GrabAlgae", autoSubsystem.GrabAlgae(algaeSubsystem));
         NamedCommands.registerCommand("EjectAlgae", autoSubsystem.EjectAlgae(algaeSubsystem));
@@ -181,13 +181,13 @@ xboxDrive.x().whileTrue(
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
             -xboxDrive.getLeftY() * MaxSpeed / 6,
-            0.25,
+            Constants.VisionConstants.xOffset,
             true) * MaxSpeed)
             
         // Left/right movement to center with the target
         .withVelocityY(-visionSubsystem.calculateYPower(
             -xboxDrive.getLeftX() * MaxSpeed / 6,
-            .06,
+            Constants.VisionConstants.yOffsetLeft,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
@@ -202,13 +202,13 @@ xboxDrive.b().whileTrue(
         // Forward/backward movement based on distance from target
         .withVelocityX(-visionSubsystem.calculateXPower(
             -xboxDrive.getLeftY() * MaxSpeed / 6,
-            0.1,
+            Constants.VisionConstants.xOffset,
             true) * MaxSpeed/6)
             
         // Left/right movement to center with the target
         .withVelocityY(visionSubsystem.calculateYPower(
             -xboxDrive.getLeftX() * MaxSpeed / 6,
-            -22.0,
+            Constants.VisionConstants.yOffsetRight,
             true) * MaxSpeed)
             
         // Rotation to align parallel to the target
