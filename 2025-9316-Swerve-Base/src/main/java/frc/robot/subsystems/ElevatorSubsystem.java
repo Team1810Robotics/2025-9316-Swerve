@@ -27,7 +27,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final ElevatorFeedforward elevatorFF;
     private static final double MAX_HEIGHT = 40;
     private static final double MIN_HEIGHT = 0;
-    public static final double INTAKE_POSITION = .5;
+    public static final double INTAKE_POSITION = 0;
     public static final double L1_POSITION = 11;        //10    
     public static final double L2_POSITION = 27;        //18
     public static final double Algae1 = 18.5;        //36

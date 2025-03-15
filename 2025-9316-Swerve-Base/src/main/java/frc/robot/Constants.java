@@ -66,7 +66,7 @@ public class Constants {
         public static final double CAMERA_PITCH = 0.0; // Units? (e.g., degrees)
 
         public static final double xOffset = .25;
-        public static final double yOffsetLeft = 0.06;
+        public static final double yOffsetLeft = 0.07;
         public static final double yOffsetRight = -.1;
 
         
