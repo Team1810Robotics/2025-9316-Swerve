@@ -30,7 +30,7 @@ public class ElevatorCommand extends Command {
         //sam was here
         this.elevatorSubsystem = elevatorSubsystem;
 
-        this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT  : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT );
+        this.adjustment = isUp ? ElevatorSubsystem.MANUAL_ADJUST_INCREMENT  : -ElevatorSubsystem.MANUAL_ADJUST_INCREMENT;
         this.targetPosition = elevatorSubsystem.getElevatorPosition() + adjustment;
         System.out.println("Setting target position to adjustment: " + adjustment);
         this.targetPosition = this.adjustment;
@@ -42,11 +42,8 @@ public class ElevatorCommand extends Command {
     @Override
     public void initialize() {  
          System.out.println(adjustment);
-         if (targetPosition != null) {
-             System.out.println("Moving Elevator to: " + targetPosition);
-         } else {
-             System.out.println("Adjusting Elevator by: " + adjustment);
-         } 
+         System.out.println("Moving Elevator to: " + targetPosition);
+       
     }
 
     @Override
