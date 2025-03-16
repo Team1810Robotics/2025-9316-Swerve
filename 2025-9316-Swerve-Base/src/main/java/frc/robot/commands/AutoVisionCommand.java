@@ -45,7 +45,7 @@ public class AutoVisionCommand  extends Command{
         System.out.println("AutoVisionCommand: target detected.");
 
         // Calculate the PID outputs
-        double xPower = visionSubsystem.calculateXPower(0, Constants.VisionConstants.xOffset+.1, this.vision);
+        double xPower = visionSubsystem.calculateXPower(0, Constants.VisionConstants.xOffset, this.vision);
         double yPower = visionSubsystem.calculateYPower(0, Constants.VisionConstants.yOffsetLeft, this.vision);
         double rotationPower = visionSubsystem.calculateParallelRotationPower(0, this.vision);
        
@@ -63,7 +63,7 @@ public class AutoVisionCommand  extends Command{
         // Apply the drive command
         // Create the request
         SwerveRequest.RobotCentric request = visDrive
-        .withVelocityX(velocityX)
+        .withVelocityX(velocityX*2)
         .withVelocityY(velocityY)
         .withRotationalRate(rotationalRate);
 
