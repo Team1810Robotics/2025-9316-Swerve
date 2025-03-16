@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralHandlerSubsystem;
@@ -12,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 
 public class AutoVisionCommand  extends Command{
+    private boolean vision = false;
     private final VisionSubsystem visionSubsystem;
     private final CoralHandlerSubsystem coralHandlerSubsystem;
     public final CommandSwerveDrivetrain drivetrain;
@@ -20,10 +22,11 @@ public class AutoVisionCommand  extends Command{
     private final SwerveRequest.RobotCentric visDrive = new SwerveRequest.RobotCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-    public AutoVisionCommand(CoralHandlerSubsystem coralHandlerSubsystem, VisionSubsystem visionSubsystem, CommandSwerveDrivetrain drivetrain){
+    public AutoVisionCommand(CoralHandlerSubsystem coralHandlerSubsystem, VisionSubsystem visionSubsystem, CommandSwerveDrivetrain drivetrain, boolean vision){
         this.visionSubsystem = visionSubsystem;
         this.coralHandlerSubsystem = coralHandlerSubsystem;
         this.drivetrain = drivetrain;
+        this.vision = vision;
         addRequirements(visionSubsystem , drivetrain);
     }
 
@@ -32,18 +35,19 @@ public class AutoVisionCommand  extends Command{
     public void execute() {
         if (!visionSubsystem.hasTarget()) {
             System.out.println("AutoVisionCommand: No target detected.");
-            drivetrain.applyRequest(() -> visDrive
-                .withVelocityX(0)
-                .withVelocityY(0)
-                .withRotationalRate(0));
+            SwerveRequest.RobotCentric request = visDrive
+                .withVelocityX(0.00)
+                .withVelocityY(0.00)
+                .withRotationalRate(0);
+            drivetrain.setControl(request);
             return;
         }   
         System.out.println("AutoVisionCommand: target detected.");
 
         // Calculate the PID outputs
-        double xPower = visionSubsystem.calculateXPower(0, 0.26, true);
-        double yPower = visionSubsystem.calculateYPower(0, .04, true);
-        double rotationPower = visionSubsystem.calculateParallelRotationPower(0, true);
+        double xPower = visionSubsystem.calculateXPower(0, Constants.VisionConstants.xOffset+.1, this.vision);
+        double yPower = visionSubsystem.calculateYPower(0, Constants.VisionConstants.yOffsetLeft, this.vision);
+        double rotationPower = visionSubsystem.calculateParallelRotationPower(0, this.vision);
        
         // Compute final velocities
         double velocityX = -xPower * MaxSpeed;
@@ -88,8 +92,16 @@ public class AutoVisionCommand  extends Command{
     ); */
     }
     public boolean isFinished() {
-        double range = visionSubsystem.getRange().orElse(0.0);
-        return range < 0.25;
+        
+        double range = visionSubsystem.getRange().orElse(2.0);
+        if(range < .35){
+            SwerveRequest.RobotCentric request = visDrive
+                .withVelocityX(0)
+                .withVelocityY(0)
+                .withRotationalRate(0);
+            drivetrain.setControl(request);
+        }
+        return range < 0.35;
         //return visionSubsystem.getRange().orElse(0.0) < 0.5;
     }
 

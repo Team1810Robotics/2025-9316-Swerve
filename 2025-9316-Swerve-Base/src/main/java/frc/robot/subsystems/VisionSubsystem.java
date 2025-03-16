@@ -98,6 +98,7 @@ public Optional<Double> getTagYaw() {
 // Add a method to calculate rotation needed for parallel alignment
 public double calculateParallelRotationPower(double defaultRotation, boolean enableVision) {
     if (hasTarget() && enableVision) {
+        System.out.println("Current range: " + this.getRange().orElse(-1.0));
         Optional<Double> tagYaw = getTagYaw();
         if (tagYaw.isPresent()) {
             double targetAngle;

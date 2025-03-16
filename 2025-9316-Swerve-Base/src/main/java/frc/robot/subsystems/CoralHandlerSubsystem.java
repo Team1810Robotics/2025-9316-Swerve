@@ -54,7 +54,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     public void startIntake() {
         coralHandlerMotor.set(1);
         setLEDColor(Constants.LEDConstants.YELLOW, "yellow");
-        System.out.println("Coral Handler Intake Active");
+        //System.out.println("Coral Handler Intake Active");
     }
 
     public void nudge(){
@@ -72,7 +72,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     public void startOuttake() {
         coralHandlerMotor.set(0.31);
         setLEDColor(Constants.LEDConstants.RED, "red");
-        System.out.println("Coral Handler Outtake Active");
+        //System.out.println("Coral Handler Outtake Active");
     }
 
     // public void activateManualOverride() {
@@ -91,7 +91,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
         if (hopperBroken) {
             isCoralInProcess = true;
             setLEDColor(Constants.LEDConstants.BLUE,"Blue"); // Idle
-            System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
+            //System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
             coralHandlerMotor.set(.35);
         }
 
@@ -192,12 +192,12 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     private void setLEDColor(int[] color, String colorName) {
         // Placeholder for LED control
         ledSubsystem.changeLEDColor(color, colorName);
-        System.out.println("LED Color: " + colorName);
+        //System.out.println("LED Color: " + colorName);
     }
 
     public void stopCoralHandler() {
         coralHandlerMotor.set(0);
         setLEDColor(Constants.LEDConstants.GREEN,"Green"); // Idle
-        System.out.println("Coral Handler Stopped");
+        //System.out.println("Coral Handler Stopped");
     }
 }

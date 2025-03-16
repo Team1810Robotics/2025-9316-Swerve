@@ -73,10 +73,14 @@ public class AutoSubsystem extends SubsystemBase {
         };
     }
     public static Command AutoVision(CoralHandlerSubsystem coralHandlerSubsystem, VisionSubsystem visionSubsystem, CommandSwerveDrivetrain drivetrain) {
-            return new AutoVisionCommand(coralHandlerSubsystem,visionSubsystem,drivetrain);
+            return new AutoVisionCommand(coralHandlerSubsystem,visionSubsystem,drivetrain, true);
                 //new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(1),
                 //new AutoCoralStopCommand(coralHandlerSubsystem).withTimeout(1)
             
+    }
+
+    public static Command StopVision(CoralHandlerSubsystem coralHandlerSubsystem, VisionSubsystem visionSubsystem, CommandSwerveDrivetrain drivetrain) {
+        return new AutoVisionCommand(coralHandlerSubsystem,visionSubsystem,drivetrain, false);
     }
     //Drop the Coral, get Algae at L2 
     public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
@@ -114,7 +118,7 @@ public class AutoSubsystem extends SubsystemBase {
 
     public static Command L1Pos(ElevatorSubsystem elevatorSubsystem){
         logger.info("Executing Coral L1 height Auto Mode");
-        return new SequentialCommandGroup(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(1));
+        return new SequentialCommandGroup(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(3));
     }
 
     public static Command Algae1Pos(ElevatorSubsystem elevatorSubsystem){

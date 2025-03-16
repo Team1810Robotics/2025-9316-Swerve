@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "VisPathRight"
+            "pathName": "VisPathLeft"
           }
         },
         {
@@ -23,13 +23,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoVisionCommand"
+                  "name": "L1Pos"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "L1Pos"
+                  "name": "AutoVisionCommand"
                 }
               }
             ]

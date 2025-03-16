@@ -48,7 +48,7 @@ public class ElevatorCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("Executing: Moving to " + targetPosition);
+        //System.out.println("Executing: Moving to " + targetPosition);
         elevatorSubsystem.setElevatorPosition(targetPosition);
     }
 
