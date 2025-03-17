@@ -58,7 +58,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
     }
 
     public void nudge(){
-        coralHandlerMotor.set(0.10);
+        coralHandlerMotor.set(0.19);
         setLEDColor(Constants.LEDConstants.RED, "red");
 
     }

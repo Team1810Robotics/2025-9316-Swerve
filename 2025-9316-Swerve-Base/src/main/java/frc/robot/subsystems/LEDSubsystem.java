@@ -35,7 +35,7 @@ public class LEDSubsystem extends SubsystemBase {
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
         configAll.stripType = LEDStripType.GRB;
-        configAll.brightnessScalar = 0.1;
+        configAll.brightnessScalar = 1;
         configAll.vBatOutputMode = CANdle.VBatOutputMode.Modulated;
         m_candle.configAllSettings(configAll, 100);
     }
@@ -59,7 +59,13 @@ public class LEDSubsystem extends SubsystemBase {
          final int r = colorCode[0];
          final int g = colorCode[1];
          final int b = colorCode[2];
-        m_candle.setLEDs(r,g,b);
+        m_candle.setLEDs(r,g,b, 0, 0, 192);
+        m_candle.setLEDs(255,20,147, 0, 192, 57);
+
+    }
+
+    public void initLEDColor(){
+        m_candle.setLEDs(255,20,147, 0, 0, 240);
     }
 
     public void changeAnimation(AnimationTypes toChange) {
